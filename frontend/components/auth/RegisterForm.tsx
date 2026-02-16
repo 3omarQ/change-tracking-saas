@@ -2,8 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginFormData } from "@/zod-schemas/auth";
-import { useLoginMutation } from "@/hooks/mutations/useLoginMutation";
+import { registerSchema, RegisterFormData } from "@/zod-schemas/auth";
+import { useRegisterMutation } from "@/hooks/mutations/useRegisterMutation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,28 +15,41 @@ import { FaGithub } from "react-icons/fa";
 import { authService } from "@/services/auth.service";
 import Link from "next/link";
 
-export function LoginForm() {
-  const { mutate: login, isPending } = useLoginMutation();
+export function RegisterForm() {
+  const { mutate: register, isPending } = useRegisterMutation();
 
   const {
     register: registerField,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    login(data);
+  const onSubmit = (data: RegisterFormData) => {
+    register(data);
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
+        <CardTitle>Create an account</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+          <Field>
+            <FieldLabel htmlFor="name">Full Name</FieldLabel>
+            <Input
+              id="name"
+              type="text"
+              placeholder="John Doe"
+              {...registerField("name")}
+            />
+            {errors.name && (
+              <p className="text-sm text-destructive">{errors.name.message}</p>
+            )}
+          </Field>
+
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
@@ -46,30 +59,36 @@ export function LoginForm() {
               {...registerField("email")}
             />
             {errors.email && (
-              <p className="text-sm text-destructive mt-1">
+              <p className="text-sm text-destructive ">
                 {errors.email.message}
               </p>
             )}
           </Field>
 
           <Field>
-            <div className="flex items-center justify-between">
-              <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Link
-                href="/forgot-password"
-                className="text-sm underline-offset-4 hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
+            <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input
               id="password"
               type="password"
               {...registerField("password")}
             />
             {errors.password && (
-              <p className="text-sm text-destructive mt-1">
+              <p className="text-sm text-destructive ">
                 {errors.password.message}
+              </p>
+            )}
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="confirmPassword">Confirm Password</FieldLabel>
+            <Input
+              id="confirmPassword"
+              type="password"
+              {...registerField("confirmPassword")}
+            />
+            {errors.confirmPassword && (
+              <p className="text-sm text-destructive ">
+                {errors.confirmPassword.message}
               </p>
             )}
           </Field>
@@ -78,7 +97,7 @@ export function LoginForm() {
             {isPending ? (
               <Loader2Icon className="h-4 w-4 animate-spin" />
             ) : (
-              "Login"
+              "Create Account"
             )}
           </Button>
 
@@ -104,12 +123,12 @@ export function LoginForm() {
           </div>
 
           <FieldDescription className="text-center">
-            {"Don't have an account?"}
+            Already have an account?{" "}
             <Link
-              href="/register"
+              href="/login"
               className="underline underline-offset-4 hover:text-primary"
             >
-              Sign up
+              Login
             </Link>
           </FieldDescription>
         </form>

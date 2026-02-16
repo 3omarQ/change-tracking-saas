@@ -1,28 +1,22 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Data Watch",
-  description: "Scrape and Change-tracking",
-};
+import "./globals.css";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/query-client";
+import { Toaster } from "sonner";
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange
-        >
+    <html lang="en" className="h-full">
+      <body className="min-h-screen bg-background relative">
+        <QueryClientProvider client={queryClient}>
           {children}
-        </ThemeProvider>
+          <Toaster position="top-right" richColors />
+        </QueryClientProvider>
       </body>
     </html>
   );
