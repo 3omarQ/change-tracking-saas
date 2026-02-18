@@ -18,6 +18,10 @@ import Link from "next/link";
 export function LoginForm() {
   const { mutate: login, isPending } = useLoginMutation();
 
+  const onSubmit = (data: LoginFormData) => {
+    login(data);
+  };
+
   const {
     register: registerField,
     handleSubmit,
@@ -26,17 +30,17 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    login(data);
-  };
-
   return (
     <Card>
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+          className="space-y-4"
+        >
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
@@ -106,7 +110,7 @@ export function LoginForm() {
           <FieldDescription className="text-center">
             {"Don't have an account?"}
             <Link
-              href="/register"
+              href="/sign-up"
               className="underline underline-offset-4 hover:text-primary"
             >
               Sign up

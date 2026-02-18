@@ -14,6 +14,11 @@ export const authService = {
     const response = await apiClient.post<AuthResponse>("/auth/login", data);
     if (response.data.accessToken) {
       localStorage.setItem("accessToken", response.data.accessToken);
+
+      // also set cookie so middleware(proxy) can read it
+      document.cookie = `accessToken=${
+        response.data.accessToken
+      }; path=/; max-age=${7 * 24 * 60 * 60}`;
     }
     return response.data;
   },
@@ -66,6 +71,7 @@ export const authService = {
 
   // Logout
   logout: () => {
+    document.cookie = "accessToken=; path=/; max-age=0"; // clear cookie too
     localStorage.removeItem("accessToken");
   },
 

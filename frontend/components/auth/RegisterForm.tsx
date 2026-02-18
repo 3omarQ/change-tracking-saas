@@ -31,7 +31,7 @@ export function RegisterForm() {
   };
 
   return (
-    <Card>
+    <Card className="mb-5">
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
       </CardHeader>
@@ -125,7 +125,7 @@ export function RegisterForm() {
           <FieldDescription className="text-center">
             Already have an account?{" "}
             <Link
-              href="/login"
+              href="/sign-in"
               className="underline underline-offset-4 hover:text-primary"
             >
               Login

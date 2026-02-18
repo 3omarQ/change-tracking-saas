@@ -58,7 +58,7 @@ export function VerifyEmailForm() {
     try {
       await authService.resendVerificationCode(email);
       toast.success("Verification code resent!");
-    } catch (error: api) {
+    } catch (error: unknown) {
       toast.error("Failed to resend code");
     } finally {
       setIsResending(false);
@@ -115,7 +115,7 @@ export function VerifyEmailForm() {
           </Button>
 
           <FieldDescription className="text-center">
-            Didn't receive the code?{" "}
+            {"Didn't receive the code"}
             <button
               type="button"
               onClick={handleResendCode}

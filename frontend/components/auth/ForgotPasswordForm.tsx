@@ -45,13 +45,13 @@ export function ForgotPasswordForm() {
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
-            We've sent you a password reset link. Please check your inbox.
+            We&aposve sent you a password reset link. Please check your inbox.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <FieldDescription className="text-center">
             <Link
-              href="/login"
+              href="/sign-in"
               className="underline underline-offset-4 hover:text-primary"
             >
               Back to login
@@ -98,7 +98,7 @@ export function ForgotPasswordForm() {
           <FieldDescription className="text-center">
             Remember your password?{" "}
             <Link
-              href="/login"
+              href="/sign-in"
               className="underline underline-offset-4 hover:text-primary"
             >
               Login

@@ -2,6 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
+import { ApiError } from "next/dist/server/api-utils";
 
 export const useRegisterMutation = () => {
   const router = useRouter();
@@ -14,7 +16,7 @@ export const useRegisterMutation = () => {
       sessionStorage.setItem("verificationEmail", data.email);
       router.push("/verify-email");
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<ApiError>) => {
       toast.error(error.response?.data?.message || "Registration failed");
     },
   });
