@@ -12,7 +12,7 @@ export const useResetPasswordMutation = () => {
     mutationFn: authService.resetPassword,
     onSuccess: () => {
       toast.success("Password reset successful!");
-      router.push("/login");
+      router.push("/sign-in");
     },
     onError: (error: AxiosError<ApiError>) => {
       toast.error(error.response?.data?.message || "Password reset failed");

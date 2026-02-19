@@ -1,9 +1,5 @@
-"use client";
-
 import "./globals.css";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/lib/query-client";
-import { Toaster } from "sonner";
+import Providers from "@/components/providers/Providers";
 
 export default function RootLayout({
   children,
@@ -11,12 +7,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full" suppressHydrationWarning>
       <body className="min-h-screen bg-background relative">
-        <QueryClientProvider client={queryClient}>
-          {children}
-          <Toaster position="top-right" richColors />
-        </QueryClientProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

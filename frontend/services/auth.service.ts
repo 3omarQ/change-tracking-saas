@@ -14,6 +14,7 @@ export const authService = {
     const response = await apiClient.post<AuthResponse>("/auth/login", data);
     if (response.data.accessToken) {
       localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
       // also set cookie so middleware(proxy) can read it
       document.cookie = `accessToken=${
@@ -39,6 +40,10 @@ export const authService = {
     );
     if (response.data.accessToken) {
       localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      document.cookie = `accessToken=${
+        response.data.accessToken
+      }; path=/; max-age=${7 * 24 * 60 * 60}`;
     }
     return response.data;
   },
@@ -73,6 +78,7 @@ export const authService = {
   logout: () => {
     document.cookie = "accessToken=; path=/; max-age=0"; // clear cookie too
     localStorage.removeItem("accessToken");
+    window.location.href = "/sign-in";
   },
 
   // Social auth

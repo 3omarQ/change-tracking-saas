@@ -1,120 +1,175 @@
 @import "tailwindcss";
+
+/*
+  Color system:
+  - Primary (dark azure):   hsl(190, 100%, 17%)  — special text, outline button text, hover text
+  - Secondary (deep teal):  hsl(195, 40%, 15%)   — darker contexts, dark bg text
+  - Accent (bright cyan):   hsl(181, 67%, 51%)   — highlights, badges, toasts, shiny elements
+  - Neutrals: very subtly teal-tinted whites/grays for cards, borders, muted areas
+*/
+
 :root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(220.9091 39.2857% 10.9804%);
-  --card: hsl(210 20% 98.0392%);
-  --card-foreground: hsl(220.9091 39.2857% 10.9804%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(220.9091 39.2857% 10.9804%);
-  --primary: hsl(183.6486 60.6557% 52.1569%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(194.4 32.4675% 15.098%);
-  --secondary-foreground: hsl(0 0% 100%);
-  --muted: hsl(220 14.2857% 95.8824%);
-  --muted-foreground: hsl(220 8.9362% 46.0784%);
-  --accent: hsl(220 14.2857% 95.8824%);
-  --accent-foreground: hsl(183.6486 60.6557% 52.1569%);
-  --destructive: hsl(0 84.2365% 60.1961%);
+  /* Base */
+  --background: hsl(180 20% 99%);
+  --foreground: hsl(195 40% 12%);
+
+  /* Card — very light, barely-there teal hint */
+  --card: hsl(180 30% 98%);
+  --card-foreground: hsl(195 40% 12%);
+
+  /* Popover */
+  --popover: hsl(180 25% 98.5%);
+  --popover-foreground: hsl(195 40% 12%);
+
+  /* Primary — dark azure, used for special text & outline button */
+  --primary: hsl(190 100% 17%);
+  --primary-foreground: hsl(180 60% 97%);
+
+  /* Secondary — deep teal, slightly lighter than primary */
+  --secondary: hsl(185 35% 92%);
+  --secondary-foreground: hsl(190 100% 17%);
+
+  /* Muted — warm neutral with the faintest teal undertone */
+  --muted: hsl(182 18% 94%);
+  --muted-foreground: hsl(192 12% 44%);
+
+  /* Accent — bright cyan/green, for highlights, badges, active states */
+  --accent: hsl(181 40% 91%);
+  --accent-foreground: hsl(190 100% 17%);
+
+  /* Destructive */
+  --destructive: hsl(4 86% 58%);
   --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(210 20% 88.0392%);
-  --input: hsl(210 20% 88.0392%);
-  --ring: hsl(183.6486 60.6557% 52.1569%);
-  --chart-1: hsl(183.6486 60.6557% 52.1569%);
-  --chart-2: hsl(194.4 32.4675% 15.098%);
-  --chart-3: hsl(215 13.7931% 34.1176%);
-  --chart-4: hsl(217.8947 10.6145% 64.902%);
-  --chart-5: hsl(216 12.1951% 83.9216%);
-  --sidebar: hsl(0 0% 98.8235%);
-  --sidebar-foreground: hsl(220.9091 39.2857% 10.9804%);
-  --sidebar-primary: hsl(183.6486 60.6557% 52.1569%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(220 14.2857% 95.8824%);
-  --sidebar-accent-foreground: hsl(183.6486 60.6557% 52.1569%);
-  --sidebar-border: hsl(210 40% 96.0784%);
-  --sidebar-ring: hsl(183.6486 60.6557% 52.1569%);
+
+  /* Border & Input — very subtle teal tint */
+  --border: hsl(185 20% 88%);
+  --input: hsl(185 20% 88%);
+  --ring: hsl(181 67% 51%);
+
+  /* Charts — built around the three core colors */
+  --chart-1: hsl(181 67% 51%);
+  --chart-2: hsl(190 100% 17%);
+  --chart-3: hsl(195 40% 35%);
+  --chart-4: hsl(181 40% 65%);
+  --chart-5: hsl(190 30% 75%);
+
+  /* Sidebar */
+  --sidebar: hsl(190 30% 97%);
+  --sidebar-foreground: hsl(195 40% 12%);
+  --sidebar-primary: hsl(190 100% 17%);
+  --sidebar-primary-foreground: hsl(180 60% 97%);
+  --sidebar-accent: hsl(181 40% 91%);
+  --sidebar-accent-foreground: hsl(190 100% 17%);
+  --sidebar-border: hsl(185 20% 90%);
+  --sidebar-ring: hsl(181 67% 51%);
+
+  /* Typography */
   --font-sans: Inter, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: JetBrains Mono, monospace;
+
+  /* Radius */
   --radius: 0.375rem;
-  --shadow-x: 0px;
-  --shadow-y: 2px;
-  --shadow-blur: 4px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.02;
-  --shadow-color: #000000;
-  --shadow-2xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.01);
-  --shadow-xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.01);
-  --shadow-sm: 0px 2px 4px 0px hsl(0 0% 0% / 0.02),
-    0px 1px 2px -1px hsl(0 0% 0% / 0.02);
-  --shadow: 0px 2px 4px 0px hsl(0 0% 0% / 0.02),
-    0px 1px 2px -1px hsl(0 0% 0% / 0.02);
-  --shadow-md: 0px 2px 4px 0px hsl(0 0% 0% / 0.02),
-    0px 2px 4px -1px hsl(0 0% 0% / 0.02);
-  --shadow-lg: 0px 2px 4px 0px hsl(0 0% 0% / 0.02),
-    0px 4px 6px -1px hsl(0 0% 0% / 0.02);
-  --shadow-xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.02),
-    0px 8px 10px -1px hsl(0 0% 0% / 0.02);
-  --shadow-2xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.05);
+
+  /* Shadows — very subtle, light mode */
+  --shadow-2xs: 0px 1px 2px 0px hsl(190 30% 10% / 0.04);
+  --shadow-xs: 0px 1px 3px 0px hsl(190 30% 10% / 0.05);
+  --shadow-sm: 0px 2px 4px 0px hsl(190 30% 10% / 0.05),
+    0px 1px 2px -1px hsl(190 30% 10% / 0.04);
+  --shadow: 0px 2px 4px 0px hsl(190 30% 10% / 0.05),
+    0px 1px 2px -1px hsl(190 30% 10% / 0.04);
+  --shadow-md: 0px 4px 8px 0px hsl(190 30% 10% / 0.06),
+    0px 2px 4px -1px hsl(190 30% 10% / 0.04);
+  --shadow-lg: 0px 8px 16px 0px hsl(190 30% 10% / 0.07),
+    0px 4px 6px -1px hsl(190 30% 10% / 0.04);
+  --shadow-xl: 0px 12px 24px 0px hsl(190 30% 10% / 0.08),
+    0px 8px 10px -1px hsl(190 30% 10% / 0.05);
+  --shadow-2xl: 0px 24px 48px 0px hsl(190 30% 10% / 0.1);
+
   --tracking-normal: -0.01em;
   --spacing: 0.25rem;
 }
 
 .dark {
-  --background: hsl(197.1429 28% 4.902%);
-  --foreground: hsl(210 20% 98.0392%);
-  --card: hsl(200 20.9302% 8.4314%);
-  --card-foreground: hsl(210 20% 98.0392%);
-  --popover: hsl(197.1429 28% 4.902%);
-  --popover-foreground: hsl(210 20% 98.0392%);
-  --primary: hsl(183.6486 60.6557% 52.1569%);
-  --primary-foreground: hsl(197.1429 28% 4.902%);
-  --secondary: hsl(193.9286 27.451% 40%);
-  --secondary-foreground: hsl(210 20% 98.0392%);
-  --muted: hsl(205 18.75% 12.549%);
-  --muted-foreground: hsl(217.8947 10.6145% 64.902%);
-  --accent: hsl(205 18.75% 12.549%);
-  --accent-foreground: hsl(183.6486 60.6557% 52.1569%);
-  --destructive: hsl(0 84.2365% 60.1961%);
+  /* Base */
+  --background: hsl(197 28% 5%);
+  --foreground: hsl(182 20% 95%);
+
+  /* Card */
+  --card: hsl(195 25% 8%);
+  --card-foreground: hsl(182 20% 95%);
+
+  /* Popover */
+  --popover: hsl(197 28% 5%);
+  --popover-foreground: hsl(182 20% 95%);
+
+  /* Primary — bright cyan in dark mode for visibility */
+  --primary: hsl(181 67% 51%);
+  --primary-foreground: hsl(195 40% 8%);
+
+  /* Secondary */
+  --secondary: hsl(193 27% 18%);
+  --secondary-foreground: hsl(182 20% 92%);
+
+  /* Muted */
+  --muted: hsl(197 22% 12%);
+  --muted-foreground: hsl(192 12% 58%);
+
+  /* Accent */
+  --accent: hsl(190 30% 14%);
+  --accent-foreground: hsl(181 67% 51%);
+
+  /* Destructive */
+  --destructive: hsl(4 86% 58%);
   --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(203.0769 16.0494% 15.8824%);
-  --input: hsl(203, 16%, 20%);
-  --ring: hsl(183.6486 60.6557% 52.1569%);
-  --chart-1: hsl(183.6486 60.6557% 52.1569%);
-  --chart-2: hsl(193.9286 27.451% 40%);
-  --chart-3: hsl(216 12.1951% 83.9216%);
-  --chart-4: hsl(217.8947 10.6145% 64.902%);
-  --chart-5: hsl(215 13.7931% 34.1176%);
-  --sidebar: hsl(197.1429 33.3333% 4.1176%);
-  --sidebar-foreground: hsl(210 20% 98.0392%);
-  --sidebar-primary: hsl(183.6486 60.6557% 52.1569%);
-  --sidebar-primary-foreground: hsl(197.1429 28% 4.902%);
-  --sidebar-accent: hsl(205 18.75% 12.549%);
-  --sidebar-accent-foreground: hsl(183.6486 60.6557% 52.1569%);
-  --sidebar-border: hsl(205 18.75% 12.549%);
-  --sidebar-ring: hsl(183.6486 60.6557% 52.1569%);
+
+  /* Border & Input */
+  --border: hsl(197 18% 16%);
+  --input: hsl(197 18% 20%);
+  --ring: hsl(181 67% 51%);
+
+  /* Charts */
+  --chart-1: hsl(181 67% 51%);
+  --chart-2: hsl(185 45% 40%);
+  --chart-3: hsl(182 20% 75%);
+  --chart-4: hsl(192 12% 58%);
+  --chart-5: hsl(195 20% 30%);
+
+  /* Sidebar */
+  --sidebar: hsl(197 33% 4%);
+  --sidebar-foreground: hsl(182 20% 95%);
+  --sidebar-primary: hsl(181 67% 51%);
+  --sidebar-primary-foreground: hsl(195 40% 8%);
+  --sidebar-accent: hsl(190 30% 14%);
+  --sidebar-accent-foreground: hsl(181 67% 51%);
+  --sidebar-border: hsl(197 18% 14%);
+  --sidebar-ring: hsl(181 67% 51%);
+
+  /* Typography */
   --font-sans: Inter, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: JetBrains Mono, monospace;
+
+  /* Radius */
   --radius: 0.375rem;
-  --shadow-x: 0px;
-  --shadow-y: 4px;
-  --shadow-blur: 10px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.2;
-  --shadow-color: #000000;
-  --shadow-2xs: 0px 4px 10px 0px hsl(0 0% 0% / 0.1);
-  --shadow-xs: 0px 4px 10px 0px hsl(0 0% 0% / 0.1);
-  --shadow-sm: 0px 4px 10px 0px hsl(0 0% 0% / 0.2),
-    0px 1px 2px -1px hsl(0 0% 0% / 0.2);
-  --shadow: 0px 4px 10px 0px hsl(0 0% 0% / 0.2),
-    0px 1px 2px -1px hsl(0 0% 0% / 0.2);
-  --shadow-md: 0px 4px 10px 0px hsl(0 0% 0% / 0.2),
+
+  /* Shadows — more visible in dark mode */
+  --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.12);
+  --shadow-xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.15);
+  --shadow-sm: 0px 2px 6px 0px hsl(0 0% 0% / 0.2),
+    0px 1px 2px -1px hsl(0 0% 0% / 0.18);
+  --shadow: 0px 4px 8px 0px hsl(0 0% 0% / 0.22),
+    0px 1px 2px -1px hsl(0 0% 0% / 0.18);
+  --shadow-md: 0px 4px 10px 0px hsl(0 0% 0% / 0.25),
     0px 2px 4px -1px hsl(0 0% 0% / 0.2);
-  --shadow-lg: 0px 4px 10px 0px hsl(0 0% 0% / 0.2),
-    0px 4px 6px -1px hsl(0 0% 0% / 0.2);
-  --shadow-xl: 0px 4px 10px 0px hsl(0 0% 0% / 0.2),
-    0px 8px 10px -1px hsl(0 0% 0% / 0.2);
-  --shadow-2xl: 0px 4px 10px 0px hsl(0 0% 0% / 0.5);
+  --shadow-lg: 0px 8px 16px 0px hsl(0 0% 0% / 0.28),
+    0px 4px 6px -1px hsl(0 0% 0% / 0.22);
+  --shadow-xl: 0px 12px 24px 0px hsl(0 0% 0% / 0.32),
+    0px 8px 10px -1px hsl(0 0% 0% / 0.25);
+  --shadow-2xl: 0px 24px 48px 0px hsl(0 0% 0% / 0.5);
+
+  --tracking-normal: -0.01em;
+  --spacing: 0.25rem;
 }
 
 @theme inline {
