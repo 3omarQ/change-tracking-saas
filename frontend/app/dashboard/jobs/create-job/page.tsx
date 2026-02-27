@@ -1,0 +1,125 @@
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Loader2Icon, RocketIcon } from "lucide-react";
+import {
+  CREATE_JOB_DEFAULTS,
+  CreateJobFormData,
+  createJobSchema,
+} from "@/zod-schemas/createjob";
+import { CreateJobFormHeader } from "@/components/dashboard/create-job/CreateJobFormHeader";
+import { JobBasicsSection } from "@/components/dashboard/create-job/JobBasicsSection";
+import { JobNotificationSection } from "@/components/dashboard/create-job/JobNotifymeSection";
+import { JobOutputSection } from "@/components/dashboard/create-job/JobOutputSection";
+import { JobScheduleSection } from "@/components/dashboard/create-job/JobScheduleSection";
+import { jobService } from "@/services/jobs.service";
+import { AxiosError } from "axios";
+
+const CRON_MAP: Record<string, string> = {
+  hourly: "0 * * * *",
+  daily: "0 0 * * *",
+  weekly: "0 0 * * 0",
+};
+
+export default function CreateJobPage() {
+  const router = useRouter();
+
+  const form = useForm<CreateJobFormData>({
+    resolver: zodResolver(createJobSchema),
+    defaultValues: CREATE_JOB_DEFAULTS,
+  });
+
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = form;
+
+  const onSubmit = async (data: CreateJobFormData) => {
+    try {
+      // Step 1 — create or find target URL
+      const targetUrl = await jobService.findOrCreateTargetUrl({
+        url: data.url,
+      });
+
+      // Step 2 — create datapoint
+      const datapoint = await jobService.createDatapoint({
+        name: data.name,
+        path: data.datapointPath,
+        targetUrlId: targetUrl.id,
+      });
+
+      // Step 3 — create job
+      const job = await jobService.createJob({
+        datapointId: datapoint.id,
+        definition: "", // empty for now
+        cron:
+          data.scheduleType === "schedule" && data.scheduleInterval
+            ? CRON_MAP[data.scheduleInterval]
+            : undefined,
+
+        scheduleStart:
+          data.scheduleStart === "custom" && data.scheduleStartDate
+            ? new Date(data.scheduleStartDate).toISOString()
+            : data.scheduleStart === "now"
+            ? new Date().toISOString()
+            : undefined,
+
+        extractorType: data.extractorType,
+        outputFormat: data.outputFormat,
+        notifyOnFinish: data.notifyOnFinish ?? true,
+        notifyOnDiff: data.notifyOnDiff ?? true,
+        notifyOnFail: data.notifyOnFail ?? true,
+      });
+
+      toast.success("Job created successfully!");
+
+      if (data.scheduleType === "once") {
+        router.push(`/dashboard/jobs/${job.id}`);
+      } else {
+        router.push("/dashboard/targets");
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      toast.error(
+        axiosError.response?.data?.message || "Failed to create job."
+      );
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-8 pb-16">
+      <CreateJobFormHeader />
+
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-8">
+        <JobBasicsSection form={form} />
+        <Separator />
+        <JobScheduleSection form={form} />
+        <Separator />
+        <JobNotificationSection form={form} />
+        <Separator />
+        <JobOutputSection form={form} />
+
+        {/* Submit */}
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <Button type="button" variant="outline" onClick={() => router.back()}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isSubmitting} className="gap-2">
+            {isSubmitting ? (
+              <Loader2Icon className="h-4 w-4 animate-spin" />
+            ) : (
+              <RocketIcon className="h-4 w-4" />
+            )}
+            {isSubmitting ? "Building..." : "Build job"}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}

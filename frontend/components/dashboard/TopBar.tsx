@@ -1,3 +1,4 @@
+"use client";
 import { TopBarLogo } from "./TopbarLogo";
 import { TopBarNavigationTabs } from "./TopbarNavigationTabs";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
