@@ -2,6 +2,11 @@ import apiClient from "@/lib/api-client";
 import { Job } from "@/types/dashboard.types";
 
 export const jobService = {
+  getById: async (id: string): Promise<Job> => {
+  const { data } = await apiClient.get(`/jobs/${id}`);
+  return data;
+},
+
   createTargetUrl: async (data: { url: string }) => {
     const res = await apiClient.post("/target-urls", data);
     return res.data;

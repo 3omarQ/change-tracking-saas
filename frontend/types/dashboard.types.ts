@@ -9,14 +9,9 @@ export interface User {
   image?: string;
 }
 
-export type JobStatus = "PENDING" | "STARTED" | "DONE" | "FAILED";
+export type JobStatus = "ACTIVE" | "PAUSED";
+export type ExecutionStatus = "PENDING" | "RUNNING" | "DONE" | "FAILED";
 export type UrlStatus = "ACTIVE" | "INACTIVE";
-
-export interface JobCounts {
-  pending: number;
-  started: number;
-  finished: number;
-}
 
 export interface TargetURL {
   id: string;
@@ -40,16 +35,45 @@ export interface Datapoint {
   targetUrlId: string;
   createdAt: string;
   updatedAt: string;
+  targetUrl: {
+    id: string;
+    url: string;
+    name: string;
+    status: UrlStatus;
+  };
+}
+export interface JobExecution {
+  id: string;
+  status: ExecutionStatus;
+  startedAt: string | null;
+  finishedAt: string | null;
+  jobId: string;
+  createdAt: string;
+  logs: Log[];
+  results: Result[];
+}
+
+export interface Log {
+  id: string;
+  level: "INFO" | "WARN" | "ERROR" | "DEBUG";
+  message: string;
+  date: string;
+  executionId: string;
+}
+
+export interface Result {
+  id: string;
+  date: string;
+  definition: Record<string, unknown>;
+  executionId: string;
 }
 
 export interface Job {
   id: string;
-  status: "PENDING" | "STARTED" | "DONE" | "FAILED";
+  status: JobStatus;
   definition: string;
   scheduleStart: string | null;
   cron: string | null;
-  startedAt: string | null;
-  finishedAt: string | null;
   datapointId: string;
   extractorType: "SMART" | "BASIC";
   outputFormat: "JSON" | "MD" | "TXT";
@@ -70,12 +94,26 @@ export interface Job {
     };
   };
   _count: {
-    logs: number;
-    results: number;
+    executions: number;
   };
 }
+
 export interface FieldProps {
   label: string;
   value: React.ReactNode;
   editable?: boolean;
+}
+export interface ExecutionWithResults extends JobExecution {
+  results: Result[];
+  _count: { logs: number; results: number };
+}
+
+export interface ExecutionSummary {
+  id: string;
+  status: ExecutionStatus;
+  startedAt: string | null;
+  finishedAt: string | null;
+  jobId: string;
+  createdAt: string;
+  _count: { logs: number; results: number };
 }

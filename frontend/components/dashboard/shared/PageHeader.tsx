@@ -1,6 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
+"use client";
 import { useRouter } from "next/navigation";
+import { ChevronLeftIcon, PlusIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface StatItem {
   label: string;
@@ -9,38 +11,81 @@ interface StatItem {
 
 interface PageHeaderProps {
   title: string;
-  stats: StatItem[];
+
+  // detail page props
+  showBackButton?: boolean;
+  meta?: React.ReactNode;
+
+  // list page props
+  stats?: StatItem[];
   actionLabel?: string;
   actionHref?: string;
+
+  // shared
+  actions?: React.ReactNode;
+}
+
+function BackButton() {
+  const router = useRouter();
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-accent shrink-0"
+      onClick={() => router.back()}
+    >
+      <ChevronLeftIcon className="h-4 w-4" />
+    </Button>
+  );
+}
+
+function Stats({ stats }: { stats: StatItem[] }) {
+  return (
+    <div className="flex items-center gap-4">
+      {stats.map((stat) => (
+        <div key={stat.label} className="text-sm text-muted-foreground">
+          <span className="font-semibold text-foreground">{stat.value}</span>{" "}
+          {stat.label}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export function PageHeader({
   title,
+  showBackButton,
+  meta,
   stats,
   actionLabel,
   actionHref,
+  actions,
 }: PageHeaderProps) {
-  const router = useRouter();
-
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-4">
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          {stats.map((stat, i) => (
-            <span key={stat.label} className="flex items-center gap-1">
-              {i > 0 && <span className="text-border mr-2">·</span>}
-              <span className="font-medium text-foreground">{stat.value}</span>
-              {stat.label}
-            </span>
-          ))}
-        </div>
+    <div className="flex items-center gap-3">
+      {showBackButton && <BackButton />}
+
+      <div className="flex flex-col flex-1 gap-0.5">
+        <span className="font-semibold tracking-tight text-xl text-foreground">
+          {title}
+        </span>
+        {meta && (
+          <div className="flex items-center gap-2 flex-wrap">{meta}</div>
+        )}
+        {stats && <Stats stats={stats} />}
       </div>
+
       {actionLabel && actionHref && (
-        <Button className="gap-2" onClick={() => router.push(actionHref)}>
-          <PlusIcon className="h-4 w-4" />
-          {actionLabel}
-        </Button>
+        <Link href={actionHref}>
+          <Button size="sm" className="gap-1.5">
+            <PlusIcon className="h-3.5 w-3.5" />
+            {actionLabel}
+          </Button>
+        </Link>
+      )}
+
+      {actions && (
+        <div className="flex items-center gap-2 shrink-0">{actions}</div>
       )}
     </div>
   );

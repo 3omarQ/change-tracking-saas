@@ -30,17 +30,18 @@ export const datapointColumns: ColumnDef<Datapoint>[] = [
     accessorKey: "path",
     header: "CSS / HTML Path",
     cell: ({ row }) => (
-      <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">
+      <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono ">
         {row.getValue("path")}
       </code>
     ),
   },
   {
-    accessorKey: "targetUrlId",
-    header: "Target URL ID",
+    accessorFn: (row) => row.targetUrl.url,
+    id: "targetUrl",
+    header: "Target URL",
     cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground truncate max-w-[120px] block">
-        {row.getValue("targetUrlId")}
+      <span className="text-xs text-muted-foreground truncate block">
+        {row.getValue("targetUrl")}
       </span>
     ),
   },

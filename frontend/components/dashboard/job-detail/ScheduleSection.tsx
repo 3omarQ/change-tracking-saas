@@ -85,11 +85,7 @@ export function ScheduleSection({ job }: { job: Job }) {
           value={formatDate(job.scheduleStart)}
         />
         <JobDetailField label="Recurrence" value={formatCron(job.cron)} />
-        <JobDetailField label="Started at" value={formatDate(job.startedAt)} />
-        <JobDetailField
-          label="Finished at"
-          value={formatDate(job.finishedAt)}
-        />
+        <JobDetailField label="Started at" value={formatDate(job.createdAt)} />
       </JobDetailSection>
 
       <EditSectionModal

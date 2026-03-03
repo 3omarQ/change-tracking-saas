@@ -30,10 +30,8 @@ function FaviconIcon({ url }: { url: string }) {
 function deriveJobCounts(datapoints: TargetURL["datapoints"]) {
   const allJobs = datapoints.flatMap((d) => d.jobs);
   return {
-    pending: allJobs.filter((j) => j.status === "PENDING").length,
-    started: allJobs.filter((j) => j.status === "STARTED").length,
-    done: allJobs.filter((j) => j.status === "DONE").length,
-    failed: allJobs.filter((j) => j.status === "FAILED").length,
+    active: allJobs.filter((j) => j.status === "ACTIVE").length,
+    paused: allJobs.filter((j) => j.status === "PAUSED").length,
   };
 }
 
@@ -43,45 +41,27 @@ function JobStatusBadges({
   datapoints: TargetURL["datapoints"];
 }) {
   const counts = deriveJobCounts(datapoints);
-  const total = counts.pending + counts.started + counts.done + counts.failed;
+  const total = counts.active + counts.paused;
   if (total === 0) return null;
 
   return (
     <div className="flex items-center gap-1.5 flex-wrap">
-      {counts.pending > 0 && (
-        <Badge
-          variant="outline"
-          className="text-xs gap-1 border-amber-200 text-amber-700 bg-amber-50"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-400 inline-block" />
-          {counts.pending} pending
-        </Badge>
-      )}
-      {counts.started > 0 && (
-        <Badge
-          variant="outline"
-          className="text-xs gap-1 border-blue-200 text-blue-700 bg-blue-50"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-blue-400 inline-block animate-pulse" />
-          {counts.started} running
-        </Badge>
-      )}
-      {counts.done > 0 && (
+      {counts.active > 0 && (
         <Badge
           variant="outline"
           className="text-xs gap-1 border-emerald-200 text-emerald-700 bg-emerald-50"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 inline-block" />
-          {counts.done} done
+          {counts.active} active
         </Badge>
       )}
-      {counts.failed > 0 && (
+      {counts.paused > 0 && (
         <Badge
           variant="outline"
-          className="text-xs gap-1 border-red-200 text-red-700 bg-red-50"
+          className="text-xs gap-1 border-amber-200 text-amber-700 bg-amber-50"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-red-400 inline-block" />
-          {counts.failed} failed
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-400 inline-block" />
+          {counts.paused} paused
         </Badge>
       )}
     </div>
