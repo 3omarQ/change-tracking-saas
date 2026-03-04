@@ -104,45 +104,9 @@ export function JobScheduleSection({ form }: JobScheduleSectionProps) {
           icon={<BoltIcon className="h-4 w-4" />}
           title="Run only once"
           description="Executes immediately after creation and redirects you to the results page. Great for one-off extractions or testing your setup."
-        >
-          {/* Start */}
-          <div className="space-y-1.5">
-            <Label className="text-xs">Starting</Label>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setValue("scheduleStart", "now")}
-                className={cn(
-                  "flex-1 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
-                  scheduleStart === "now"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:bg-muted"
-                )}
-              >
-                Now
-              </button>
-              <button
-                type="button"
-                onClick={() => setValue("scheduleStart", "custom")}
-                className={cn(
-                  "flex-1 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors",
-                  scheduleStart === "custom"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:bg-muted"
-                )}
-              >
-                Custom time
-              </button>
-            </div>
-            {scheduleStart === "custom" && (
-              <Input
-                type="datetime-local"
-                className="h-8 text-xs"
-                {...form.register("scheduleStartDate")}
-              />
-            )}
-          </div>
-        </ScheduleCard>
+        />
+
+
 
         {/* Schedule */}
         <ScheduleCard

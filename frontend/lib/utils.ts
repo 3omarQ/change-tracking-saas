@@ -14,7 +14,7 @@ export function formatCron(cron: string | null): string {
   return map[cron] ?? cron;
 }
 
-export function formatDate(date: string | null, fallback = "Not yet"): string {
+export function formatDate(date: string | null, fallback = "Once"): string {
   if (!date) return fallback;
   return new Date(date).toLocaleString();
 }

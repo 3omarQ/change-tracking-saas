@@ -3,19 +3,12 @@ import { Job } from "@/types/dashboard.types";
 
 export const jobService = {
   getById: async (id: string): Promise<Job> => {
-  const { data } = await apiClient.get(`/jobs/${id}`);
-  return data;
-},
-
-  createTargetUrl: async (data: { url: string }) => {
-    const res = await apiClient.post("/target-urls", data);
-    return res.data;
+    const { data } = await apiClient.get(`/jobs/${id}`);
+    return data;
   },
+
   findOrCreateTargetUrl: async (payload: { url: string }) => {
-    const { data } = await apiClient.post(
-      "/target-urls/find-or-create",
-      payload
-    );
+    const { data } = await apiClient.post("/target-urls/find-or-create", payload);
     return data;
   },
 
@@ -24,8 +17,8 @@ export const jobService = {
     path: string;
     targetUrlId: string;
   }) => {
-    const res = await apiClient.post("/datapoints", data);
-    return res.data;
+    const { data: res } = await apiClient.post("/datapoints", data);
+    return res;
   },
 
   createJob: async (data: {
@@ -39,8 +32,8 @@ export const jobService = {
     notifyOnDiff: boolean;
     notifyOnFail: boolean;
   }) => {
-    const res = await apiClient.post("/jobs", data);
-    return res.data;
+    const { data: res } = await apiClient.post("/jobs", data);
+    return res;
   },
 
   getAll: async (): Promise<Job[]> => {

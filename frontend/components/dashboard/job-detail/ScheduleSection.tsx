@@ -40,9 +40,9 @@ export function ScheduleSection({ job }: { job: Job }) {
         : undefined,
       scheduleInterval: job.cron
         ? (Object.entries(CRON_MAP).find(([, v]) => v === job.cron)?.[0] as
-            | "hourly"
-            | "daily"
-            | "weekly") ?? "daily"
+          | "hourly"
+          | "daily"
+          | "weekly") ?? "daily"
         : "daily",
     },
   });
@@ -60,8 +60,8 @@ export function ScheduleSection({ job }: { job: Job }) {
           data.scheduleStart === "custom" && data.scheduleStartDate
             ? new Date(data.scheduleStartDate).toISOString()
             : data.scheduleStart === "now"
-            ? new Date().toISOString()
-            : undefined,
+              ? new Date().toISOString()
+              : undefined,
       });
       toast.success("Schedule updated.");
       queryClient.invalidateQueries({ queryKey: ["job", job.id] });
@@ -80,10 +80,7 @@ export function ScheduleSection({ job }: { job: Job }) {
         label="Schedule"
         onEdit={() => setOpen(true)}
       >
-        <JobDetailField
-          label="Scheduled start"
-          value={formatDate(job.scheduleStart)}
-        />
+
         <JobDetailField label="Recurrence" value={formatCron(job.cron)} />
         <JobDetailField label="Started at" value={formatDate(job.createdAt)} />
       </JobDetailSection>

@@ -1,10 +1,8 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Loader2Icon, RocketIcon } from "lucide-react";
@@ -35,17 +33,12 @@ export default function CreateJobPage() {
     defaultValues: CREATE_JOB_DEFAULTS,
   });
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form;
+  const { handleSubmit, formState: { isSubmitting } } = form;
 
   const onSubmit = async (data: CreateJobFormData) => {
     try {
-      // Step 1 — create or find target URL
-      const targetUrl = await jobService.findOrCreateTargetUrl({
-        url: data.url,
-      });
+      // Step 1 — find or create target URL
+      const targetUrl = await jobService.findOrCreateTargetUrl({ url: data.url });
 
       // Step 2 — create datapoint
       const datapoint = await jobService.createDatapoint({
@@ -54,22 +47,20 @@ export default function CreateJobPage() {
         targetUrlId: targetUrl.id,
       });
 
-      // Step 3 — create job
+      // Step 3 — create job, backend handles all scheduling
       const job = await jobService.createJob({
         datapointId: datapoint.id,
-        definition: "", // empty for now
+        definition: "",
         cron:
           data.scheduleType === "schedule" && data.scheduleInterval
             ? CRON_MAP[data.scheduleInterval]
             : undefined,
-
         scheduleStart:
-          data.scheduleStart === "custom" && data.scheduleStartDate
+          data.scheduleType === "schedule" &&
+            data.scheduleStart === "custom" &&
+            data.scheduleStartDate
             ? new Date(data.scheduleStartDate).toISOString()
-            : data.scheduleStart === "now"
-            ? new Date().toISOString()
             : undefined,
-
         extractorType: data.extractorType,
         outputFormat: data.outputFormat,
         notifyOnFinish: data.notifyOnFinish ?? true,
@@ -78,24 +69,16 @@ export default function CreateJobPage() {
       });
 
       toast.success("Job created successfully!");
-
-      if (data.scheduleType === "once") {
-        router.push(`/dashboard/jobs/${job.id}`);
-      } else {
-        router.push("/dashboard/targets");
-      }
+      router.push(`/dashboard/jobs/${job.id}`);
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
-      toast.error(
-        axiosError.response?.data?.message || "Failed to create job."
-      );
+      toast.error(axiosError.response?.data?.message || "Failed to create job.");
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto space-y-8 pb-16">
       <CreateJobFormHeader />
-
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-8">
         <JobBasicsSection form={form} />
         <Separator />
@@ -104,8 +87,6 @@ export default function CreateJobPage() {
         <JobNotificationSection form={form} />
         <Separator />
         <JobOutputSection form={form} />
-
-        {/* Submit */}
         <div className="flex items-center justify-end gap-3 pt-2">
           <Button type="button" variant="outline" onClick={() => router.back()}>
             Cancel
