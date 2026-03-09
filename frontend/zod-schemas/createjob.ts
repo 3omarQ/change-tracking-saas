@@ -1,3 +1,4 @@
+import { CRON_INTERVALS } from "@/lib/cron";
 import { z } from "zod";
 
 export const createJobSchema = z.object({
@@ -8,7 +9,7 @@ export const createJobSchema = z.object({
 
   // Section 2 - Schedule
   scheduleType: z.enum(["once", "schedule"]),
-  scheduleInterval: z.enum(["hourly", "daily", "weekly"]).optional(),
+  scheduleInterval: z.enum(CRON_INTERVALS).optional(),
   scheduleStart: z.enum(["now", "custom"]).optional(),
   scheduleStartDate: z.string().optional(),
 

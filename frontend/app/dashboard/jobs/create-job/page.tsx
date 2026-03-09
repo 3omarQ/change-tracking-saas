@@ -20,6 +20,7 @@ import { jobService } from "@/services/jobs.service";
 import { AxiosError } from "axios";
 
 const CRON_MAP: Record<string, string> = {
+  every5min: "*/5 * * * *",
   hourly: "0 * * * *",
   daily: "0 0 * * *",
   weekly: "0 0 * * 0",

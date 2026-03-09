@@ -15,6 +15,7 @@ import { BoltIcon, CalendarClockIcon } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { CreateJobSectionWrapper } from "./CreateJobSectionWrapper";
 import { CreateJobFormData } from "@/zod-schemas/createjob";
+import { CRON_LABELS, CRON_MAP } from "@/lib/cron";
 
 interface JobScheduleSectionProps {
   form: UseFormReturn<CreateJobFormData>;
@@ -129,9 +130,11 @@ export function JobScheduleSection({ form }: JobScheduleSectionProps) {
                       <SelectValue placeholder="Select interval" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="hourly">Every hour</SelectItem>
-                      <SelectItem value="daily">Every day</SelectItem>
-                      <SelectItem value="weekly">Every week</SelectItem>
+                      {Object.entries(CRON_MAP).map(([key, cron]) => (
+                        <SelectItem key={key} value={key}>
+                          {CRON_LABELS[cron]}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}

@@ -7,6 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 export function formatCron(cron: string | null): string {
   if (!cron) return "—";
   const map: Record<string, string> = {
+    "*/5 * * * *": "Every 5 minutes",
     "0 * * * *": "Every hour",
     "0 0 * * *": "Every day at midnight",
     "0 0 * * 0": "Every week on Sunday",

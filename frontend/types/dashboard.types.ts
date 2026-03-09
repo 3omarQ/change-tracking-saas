@@ -117,3 +117,16 @@ export interface ExecutionSummary {
   createdAt: string;
   _count: { logs: number; results: number };
 }
+export type NotificationType = "EXECUTION_DONE" | "EXECUTION_FAILED" | "EXECUTION_DIFF";
+
+export interface Notification {
+  id: string;
+  userId: string;
+  jobId: string | null;
+  executionId: string | null;
+  type: NotificationType;
+  title: string;
+  body: string;
+  read: boolean;
+  createdAt: string;
+}

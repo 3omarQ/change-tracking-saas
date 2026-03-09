@@ -3,6 +3,7 @@ import { TopBarLogo } from "./TopbarLogo";
 import { TopBarNavigationTabs } from "./TopbarNavigationTabs";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 import { UserMenu } from "./UserMenu";
+import { NotificationBell } from "./notifications/NotificationBell";
 import { User, Workspace } from "@/types/dashboard.types";
 
 interface TopBarProps {
@@ -29,6 +30,7 @@ export function TopBar({
             currentWorkspace={currentWorkspace}
             onWorkspaceChange={onWorkspaceChange}
           />
+          <NotificationBell />
           <UserMenu user={user} />
         </div>
       </div>

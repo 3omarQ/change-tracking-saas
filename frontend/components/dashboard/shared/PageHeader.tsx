@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ChevronLeftIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -27,12 +27,14 @@ interface PageHeaderProps {
 
 function BackButton() {
   const router = useRouter();
+  const pathname = usePathname();
+  const parentPath = pathname.split("/").slice(0, -1).join("/");
   return (
     <Button
       variant="ghost"
       size="sm"
       className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground hover:bg-accent shrink-0"
-      onClick={() => router.back()}
+      onClick={() => router.push(parentPath)}
     >
       <ChevronLeftIcon className="h-4 w-4" />
     </Button>

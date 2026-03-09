@@ -19,6 +19,7 @@ import apiClient from "@/lib/api-client";
 import { formatCron, formatDate } from "@/lib/utils";
 
 const CRON_MAP: Record<string, string> = {
+  every5min: "*/5 * * * *",
   hourly: "0 * * * *",
   daily: "0 0 * * *",
   weekly: "0 0 * * 0",
@@ -40,6 +41,7 @@ export function ScheduleSection({ job }: { job: Job }) {
         : undefined,
       scheduleInterval: job.cron
         ? (Object.entries(CRON_MAP).find(([, v]) => v === job.cron)?.[0] as
+
           | "hourly"
           | "daily"
           | "weekly") ?? "daily"
