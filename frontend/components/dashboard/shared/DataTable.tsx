@@ -9,6 +9,8 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  filterFns,
+  FilterFn,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -19,13 +21,30 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   globalFilter: string;
   entityName?: string;
+}
+
+function createExactOrFuzzyFilter<TData>(): FilterFn<TData> {
+  return (row, columnId, value, addMeta) => {
+    const search = value as string;
+    const isExact =
+      search.startsWith('"') && search.endsWith('"') && search.length > 2;
+
+    if (isExact) {
+      const exactTerm = search.slice(1, -1).toLowerCase();
+      const cellValue = String(row.getValue(columnId) ?? "").toLowerCase();
+      return cellValue === exactTerm;
+    }
+
+    return filterFns.includesString(row, columnId, value, addMeta);
+  };
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +55,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const exactOrFuzzyFilter = useMemo(() => createExactOrFuzzyFilter<TData>(), []);
 
   const table = useReactTable({
     data,
@@ -43,6 +63,7 @@ export function DataTable<TData, TValue>({
     state: { sorting, columnFilters, globalFilter },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    globalFilterFn: exactOrFuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -61,9 +82,9 @@ export function DataTable<TData, TValue>({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>

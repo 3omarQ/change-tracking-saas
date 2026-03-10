@@ -3,103 +3,33 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { DatabaseIcon } from "lucide-react";
 import { TargetURL } from "@/types/dashboard.types";
-import Image from "next/image";
+import { FaviconIcon } from "./FaviconIcon";
+import { TargetStatusBadge } from "./TargetStatusBadge";
+import { JobStatusBadge } from "./JobStatusBadge";
+import { deriveJobCounts, jobsHref, datapointsHref } from "./helpers";
 
-interface TargetCardProps {
-  target: TargetURL;
-}
-
-function FaviconIcon({ url }: { url: string }) {
-  const domain = new URL(url).hostname;
-  const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
-
-  return (
-    <Image
-      src={faviconUrl}
-      alt={domain}
-      width={16}
-      height={16}
-      className="h-4 w-4 rounded-sm object-contain"
-      onError={(e) => {
-        (e.target as HTMLImageElement).style.display = "none";
-      }}
-    />
-  );
-}
-
-function deriveJobCounts(datapoints: TargetURL["datapoints"]) {
-  const allJobs = datapoints.flatMap((d) => d.jobs);
-  return {
-    active: allJobs.filter((j) => j.status === "ACTIVE").length,
-    paused: allJobs.filter((j) => j.status === "PAUSED").length,
-  };
-}
-
-function JobStatusBadges({
-  datapoints,
-}: {
-  datapoints: TargetURL["datapoints"];
-}) {
-  const counts = deriveJobCounts(datapoints);
-  const total = counts.active + counts.paused;
-  if (total === 0) return null;
-
-  return (
-    <div className="flex items-center gap-1.5 flex-wrap">
-      {counts.active > 0 && (
-        <Badge
-          variant="outline"
-          className="text-xs gap-1 border-emerald-200 text-emerald-700 bg-emerald-50"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 inline-block" />
-          {counts.active} active
-        </Badge>
-      )}
-      {counts.paused > 0 && (
-        <Badge
-          variant="outline"
-          className="text-xs gap-1 border-amber-200 text-amber-700 bg-amber-50"
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-400 inline-block" />
-          {counts.paused} paused
-        </Badge>
-      )}
-    </div>
-  );
-}
-
-export function TargetCard({ target }: TargetCardProps) {
-  const totalJobs = target.datapoints.flatMap((d) => d.jobs).length;
+export function TargetCard({ target }: { target: TargetURL }) {
+  const counts = deriveJobCounts(target.datapoints);
+  const url = target.url;
+  const baseUrl = target.baseUrl!;
 
   return (
     <Card className="group hover:shadow-md transition-all duration-200 hover:border-border">
       <CardContent className="p-5 space-y-4">
-        {/* Top row: favicon + url + status */}
         <div className="flex items-center gap-2">
-          <FaviconIcon url={target.url} />
+          <FaviconIcon url={url} />
           <span className="text-xs text-muted-foreground truncate flex-1">
-            {target.url}
+            {url}
           </span>
-          <Badge
-            variant="outline"
-            className={
-              target.status === "ACTIVE"
-                ? "text-xs border-emerald-200 text-emerald-700 bg-emerald-50"
-                : "text-xs border-red-200 text-red-700 bg-red-50"
-            }
-          >
-            {target.status === "ACTIVE" ? "Active" : "Inactive"}
-          </Badge>
+          <TargetStatusBadge status={target.status} />
         </div>
 
-        {/* Name */}
         <h3 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors duration-150">
           {target.name}
         </h3>
 
-        {/* Badges row */}
         <div className="flex items-center gap-2 flex-wrap">
-          <Link href={`/dashboard/datapoints?target=${target.id}`}>
+          <Link href={datapointsHref(baseUrl, url)}>
             <Badge
               variant="secondary"
               className="gap-1.5 text-xs cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors"
@@ -108,14 +38,18 @@ export function TargetCard({ target }: TargetCardProps) {
               {target._count.datapoints} datapoints
             </Badge>
           </Link>
-          <JobStatusBadges datapoints={target.datapoints} />
+          {counts.active > 0 && (
+            <JobStatusBadge count={counts.active} status="active" href={jobsHref(url, "ACTIVE")} />
+          )}
+          {counts.paused > 0 && (
+            <JobStatusBadge count={counts.paused} status="paused" href={jobsHref(url, "PAUSED")} />
+          )}
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-between pt-1 border-t border-border/60">
-          <span className="text-xs text-muted-foreground">
-            {totalJobs} total jobs
-          </span>
+          <Link href={jobsHref(url)} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+            {counts.total} total jobs
+          </Link>
           <span className="text-xs text-muted-foreground">
             {new Date(target.createdAt).toLocaleDateString()}
           </span>

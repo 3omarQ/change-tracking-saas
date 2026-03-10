@@ -17,6 +17,8 @@ export interface TargetURL {
   id: string;
   name: string;
   url: string;
+  baseUrl: string | null;
+
   status: UrlStatus;
   createdAt: string;
   updatedAt: string;
@@ -38,6 +40,7 @@ export interface Datapoint {
   targetUrl: {
     id: string;
     url: string;
+    baseUrl:string;
     name: string;
     status: UrlStatus;
   };

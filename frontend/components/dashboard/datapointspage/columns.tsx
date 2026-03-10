@@ -1,16 +1,24 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowRightIcon, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Datapoint } from "@/types/dashboard.types";
+import { useRouter } from "next/navigation";
+
+function ViewJobsButton({ datapoint }: { datapoint: Datapoint }) {
+  const router = useRouter();
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      className="h-8 w-8 p-0"
+      onClick={() =>
+        router.push(`/dashboard/jobs?search=${encodeURIComponent(`"${datapoint.name}"`)}`)}
+    >
+      <ArrowRightIcon className="h-4 w-4" />
+    </Button>
+  );
+}
 
 export const datapointColumns: ColumnDef<Datapoint>[] = [
   {
@@ -64,32 +72,8 @@ export const datapointColumns: ColumnDef<Datapoint>[] = [
     ),
   },
   {
-    id: "actions",
-    cell: ({ row }) => {
-      const datapoint = row.original;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(datapoint.id)}
-            >
-              Copy ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View jobs</DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive">
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    id: "view jobs",
+    header: "Jobs",
+    cell: ({ row }) => <ViewJobsButton datapoint={row.original} />,
   },
 ];
