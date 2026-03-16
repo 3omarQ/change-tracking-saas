@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2Icon } from "lucide-react";
-import { VisuallyHidden } from "radix-ui";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 interface EditSectionModalProps {
   title: string;
   open: boolean;

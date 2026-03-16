@@ -58,7 +58,7 @@ export function buildExecutionColumns(jobId: string): ColumnDef<ExecutionSummary
     {
       id: "actions",
       cell: ({ row }) => (
-        <Link href={`/dashboard/jobs/${jobId}/executions/${row.original.id}`}>
+        <Link href={`/dashboard/jobs/${jobId}/runs/${row.original.id}`}>
           <ArrowRightIcon className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground transition-colors" />
         </Link>
       ),

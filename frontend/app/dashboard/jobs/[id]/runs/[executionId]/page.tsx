@@ -1,0 +1,36 @@
+"use client";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { executionsService } from "@/services/executions.service";
+import { Separator } from "@/components/ui/separator";
+import { ExecutionHeader } from "@/components/runs/single-run-page/ExecutionHeader";
+import { ExecutionLogs } from "@/components/runs/single-run-page/ExecutionLogs";
+import { ExecutionResult } from "@/components/runs/single-run-page/ExecutionResult";
+
+export default function ExecutionPage() {
+	const { id: jobId, executionId } = useParams<{ id: string; executionId: string }>();
+
+	const { data: execution, isLoading } = useQuery({
+		queryKey: ["execution", jobId, executionId],
+		queryFn: () => executionsService.getOne(jobId, executionId),
+	});
+
+	if (isLoading)
+		return (
+			<div className="py-24 text-center text-sm text-muted-foreground">
+				Loading execution...
+			</div>
+		);
+
+	if (!execution) return null;
+
+	return (
+		<div className="space-y-6 pb-16">
+			<ExecutionHeader execution={execution} />
+			<Separator />
+			<ExecutionResult results={execution.results} />
+			<Separator />
+			<ExecutionLogs logs={execution.logs} />
+		</div>
+	);
+}

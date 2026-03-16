@@ -18,7 +18,7 @@ export function JobDetailSection({
   return (
     <div className="rounded-lg border border-border/60 bg-card shadow-sm p-5 space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-foreground">
           <Icon className="h-3.5 w-3.5" />
           {label}
         </div>

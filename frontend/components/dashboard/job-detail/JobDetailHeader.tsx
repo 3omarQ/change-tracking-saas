@@ -7,29 +7,60 @@ import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/dashboard/shared/PageHeader";
 import { JobStatusBadge } from "@/components/dashboard/jobspage/JobStatusBadge";
 import { JobStatusToggle } from "./JobStatusToggle";
+import { DeleteButton } from "@/components/dashboard/shared/DeleteButton";
+import { jobService } from "@/services/jobs.service";
 import { Job } from "@/types/dashboard.types";
 import apiClient from "@/lib/api-client";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
-export function JobDetailHeader({ job }: { job: Job }) {
-  const router = useRouter();
-  const hasRuns = job._count.executions > 0;
+function RunButton({ jobId }: { jobId: string }) {
   const [isRunning, setIsRunning] = useState(false);
   const queryClient = useQueryClient();
 
   const handleRun = async () => {
     setIsRunning(true);
     try {
-      await apiClient.post(`/jobs/${job.id}/run`);
+      await apiClient.post(`/jobs/${jobId}/run`);
       toast.success("Job started.");
-      queryClient.invalidateQueries({ queryKey: ["job", job.id] });
+      queryClient.invalidateQueries({ queryKey: ["job", jobId] });
     } catch {
       toast.error("Failed to run job.");
     } finally {
       setIsRunning(false);
     }
   };
+
+  return (
+    <Button variant="outline" size="sm" className="gap-1.5" onClick={handleRun} disabled={isRunning}>
+      {isRunning ? (
+        <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
+      ) : (
+        <PlayIcon className="h-3.5 w-3.5" />
+      )}
+      Run
+    </Button>
+  );
+}
+
+function DeleteDescription({ job }: { job: Job }) {
+  return (
+    <>
+      <p>This will permanently delete:</p>
+      <ul className="list-disc list-inside mt-2 space-y-0.5">
+        <li>{job._count.executions} executions and their logs</li>
+        <li>All scraped results</li>
+        <li>All related notifications</li>
+        <li>Any scheduled runs will be cancelled</li>
+      </ul>
+      <p className="mt-2 font-medium text-destructive">This cannot be undone.</p>
+    </>
+  );
+}
+
+export function JobDetailHeader({ job }: { job: Job }) {
+  const router = useRouter();
+  const hasRuns = job._count.executions > 0;
 
   return (
     <PageHeader
@@ -63,20 +94,16 @@ export function JobDetailHeader({ job }: { job: Job }) {
               {job._count.executions}
             </Badge>
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-1.5"
-            onClick={handleRun}
-            disabled={isRunning}
-          >
-            {isRunning ? (
-              <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <PlayIcon className="h-3.5 w-3.5" />
-            )}
-            Run
-          </Button>
+          <RunButton jobId={job.id} />
+          <DeleteButton
+            title="Delete job?"
+            description={<DeleteDescription job={job} />}
+            action={() => jobService.remove(job.id)}
+            redirectTo="/dashboard/jobs"
+            successMessage="Job deleted."
+            errorMessage="Failed to delete job."
+            invalidateKeys={[["jobs"], ["job", job.id]]}
+          />
         </>
       }
     />

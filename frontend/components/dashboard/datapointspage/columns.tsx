@@ -4,21 +4,8 @@ import { ArrowRightIcon, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Datapoint } from "@/types/dashboard.types";
 import { useRouter } from "next/navigation";
+import DatapointActions from "./DatapointActions";
 
-function ViewJobsButton({ datapoint }: { datapoint: Datapoint }) {
-  const router = useRouter();
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="h-8 w-8 p-0"
-      onClick={() =>
-        router.push(`/dashboard/jobs?search=${encodeURIComponent(`"${datapoint.name}"`)}`)}
-    >
-      <ArrowRightIcon className="h-4 w-4" />
-    </Button>
-  );
-}
 
 export const datapointColumns: ColumnDef<Datapoint>[] = [
   {
@@ -72,8 +59,8 @@ export const datapointColumns: ColumnDef<Datapoint>[] = [
     ),
   },
   {
-    id: "view jobs",
-    header: "Jobs",
-    cell: ({ row }) => <ViewJobsButton datapoint={row.original} />,
+    id: "actions",
+    cell: ({ row }) => <DatapointActions datapoint={row.original} />,
   },
+
 ];

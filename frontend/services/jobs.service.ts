@@ -40,4 +40,8 @@ export const jobService = {
     const { data } = await apiClient.get("/jobs");
     return data;
   },
+  remove: async (id: string) => {
+  const { data } = await apiClient.delete(`/jobs/${id}`);
+  return data;
+},
 };

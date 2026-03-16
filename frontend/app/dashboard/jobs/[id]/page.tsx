@@ -13,7 +13,6 @@ import apiClient from "@/lib/api-client";
 
 export default function JobDetailPage() {
   const { id } = useParams<{ id: string }>();
-
   const { data: job, isLoading } = useQuery<Job>({
     queryKey: ["job", id],
     queryFn: async () => {
@@ -34,7 +33,7 @@ export default function JobDetailPage() {
   return (
     <div className="space-y-6 pb-16">
       <JobDetailHeader job={job} />
-      <div className="max-w-2xl mx-auto space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TargetUrlSection job={job} />
         <DatapointSection job={job} />
         <ScheduleSection job={job} />

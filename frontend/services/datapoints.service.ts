@@ -6,4 +6,8 @@ export const datapointService = {
     const { data } = await apiClient.get("/datapoints");
     return data;
   },
+  remove: async (id: string) => {
+    const { data } = await apiClient.delete(`/datapoints/${id}`);
+    return data;
+  },
 };
