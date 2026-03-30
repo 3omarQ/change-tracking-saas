@@ -5,20 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Datapoint } from "@/types/dashboard.types";
 import { useRouter } from "next/navigation";
 import DatapointActions from "./DatapointActions";
+import Link from "next/link";
 
 
 export const datapointColumns: ColumnDef<Datapoint>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="-ml-3"
-      >
-        Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")} className="-ml-3">
+        Name <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
+    ),
+    cell: ({ row }) => (
+      <Link href={`/dashboard/datapoints/${row.original.id}`} className="font-medium text-sm hover:text-primary transition-colors">
+        {row.getValue("name")}
+      </Link>
     ),
   },
   {

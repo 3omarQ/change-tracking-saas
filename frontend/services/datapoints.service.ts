@@ -10,4 +10,8 @@ export const datapointService = {
     const { data } = await apiClient.delete(`/datapoints/${id}`);
     return data;
   },
+  getById: async (id: string): Promise<Datapoint> => {
+    const { data } = await apiClient.get(`/datapoints/${id}`);
+    return data;
+  },
 };

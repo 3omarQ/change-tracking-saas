@@ -60,7 +60,7 @@ export function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild className="gap-2.5 cursor-pointer">
-          <Link href="/dashboard/account">
+          <Link href="/dashboard/settings">
             <UserIcon />
             Account
           </Link>

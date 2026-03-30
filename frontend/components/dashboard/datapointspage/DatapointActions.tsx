@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { MoreHorizontalIcon, ArrowRightIcon, Trash2Icon } from "lucide-react";
+import { MoreHorizontalIcon, ArrowRightIcon, Trash2Icon, EyeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -54,6 +54,14 @@ export default function DatapointActions({ datapoint }: { datapoint: Datapoint }
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            className="gap-2"
+            onClick={() => router.push(`/dashboard/datapoints/${datapoint.id}`)}
+          >
+            <EyeIcon className="h-3.5 w-3.5" />
+            View details
+          </DropdownMenuItem>
+
           <DropdownMenuItem
             className="gap-2"
             onClick={() =>

@@ -7,6 +7,7 @@ import { FaviconIcon } from "./FaviconIcon";
 import { TargetStatusBadge } from "./TargetStatusBadge";
 import { JobStatusBadge } from "./JobStatusBadge";
 import { deriveJobCounts, jobsHref, datapointsHref } from "./helpers";
+import { TargetCardActions } from "./TargetCardActions";
 
 export function TargetCard({ target }: { target: TargetURL }) {
   const counts = deriveJobCounts(target.datapoints);
@@ -22,6 +23,7 @@ export function TargetCard({ target }: { target: TargetURL }) {
             {url}
           </span>
           <TargetStatusBadge status={target.status} />
+          <TargetCardActions target={target} />
         </div>
 
         <h3 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors duration-150">

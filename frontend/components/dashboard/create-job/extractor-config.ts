@@ -17,7 +17,7 @@ export const EXTRACTORS = [
     badge: "AI",
     description:
       "Uses AI to intelligently parse and structure extracted content. Ideal for unstructured pages.",
-    formats: ["json", "md"] as OutputFormat[],
+    formats: ["json", "md","txt"] as OutputFormat[],
   },
   {
     value: "basic" as ExtractorType,

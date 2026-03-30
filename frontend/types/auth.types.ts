@@ -7,6 +7,8 @@ export interface User {
   emailVerified: boolean;
   createdAt: string;
   role: string;
+  notifyByEmail: boolean;
+  provider: "LOCAL" | "GOOGLE" | "GITHUB";
 }
 
 export interface AuthResponse {

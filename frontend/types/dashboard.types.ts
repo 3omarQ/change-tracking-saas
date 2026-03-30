@@ -4,9 +4,12 @@ export interface Workspace {
 }
 
 export interface User {
+  id: string;
   name: string;
   email: string;
   image?: string;
+  notifyByEmail: boolean;
+  provider: 'LOCAL' | 'GOOGLE' | 'GITHUB';
 }
 
 export type JobStatus = "ACTIVE" | "PAUSED";
@@ -85,17 +88,7 @@ export interface Job {
   notifyOnFail: boolean;
   createdAt: string;
   updatedAt: string;
-  datapoint: {
-    id: string;
-    name: string;
-    path: string;
-    targetUrl: {
-      id: string;
-      url: string;
-      name: string;
-      status: UrlStatus;
-    };
-  };
+  datapoint: Datapoint;
   _count: {
     executions: number;
   };
