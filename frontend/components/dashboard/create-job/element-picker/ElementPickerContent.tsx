@@ -10,7 +10,7 @@ import { PreviewSkeleton } from '../../datapoint-detail/PreviewSkeleton';
 
 interface Props {
   url: string;
-  onConfirm: (selector: string) => void;
+  onConfirm: (data: { selector: string; fieldNames: string[] }) => void;
 }
 
 export function ElementPickerContent({ url, onConfirm }: Props) {
@@ -20,7 +20,6 @@ export function ElementPickerContent({ url, onConfirm }: Props) {
   const { html, status, error, load } = useDatapointPreview(url, '');
   const picker = useElementPicker(iframeRef);
 
-  // reload when URL changes, freeze HTML once received
   useEffect(() => {
     stableHtml.current = null;
     picker.reset();
@@ -33,7 +32,6 @@ export function ElementPickerContent({ url, onConfirm }: Props) {
 
   return (
     <div className="flex h-full">
-
       <div className="flex-1 flex flex-col overflow-hidden border-r border-border">
         <ElementPickerToolbar hoverInfo={picker.hoverInfo} />
         <div className="flex-1 relative overflow-hidden">
@@ -48,10 +46,15 @@ export function ElementPickerContent({ url, onConfirm }: Props) {
         fields={picker.fields}
         onSetMode={picker.setMode}
         onRemoveField={picker.removeField}
-        onConfirm={() => onConfirm(picker.getFinalSelector())}
+        onRenameField={picker.renameField}
+        onConfirm={() =>
+          onConfirm({
+            selector: picker.getFinalSelector(),
+            fieldNames: picker.getFieldNames(),
+          })
+        }
         onReset={picker.reset}
       />
-
     </div>
   );
 }

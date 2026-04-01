@@ -3,7 +3,7 @@ import { RefObject, useCallback, useEffect, useState } from 'react';
 export type CaptureMode = 'text' | 'list';
 
 export interface HoverInfo { tag: string; text: string; }
-export interface Field { sel: string; label: string; }
+export interface Field { sel: string; label: string; name: string; }
 
 interface ClickMsg {
   type: 'EP_CLICK';
@@ -22,6 +22,33 @@ interface HoverMsg {
 
 type IframeMsg = ClickMsg | HoverMsg;
 
+function autoNameFromSelector(selector: string): string {
+  const s = selector.trim();
+  if (!s) return 'field';
+
+  // take last segment after combinators
+  const lastSegment = s.split(/\s+|>|\+|~/).filter(Boolean).pop() ?? s;
+
+  // remove pseudo classes/elements
+  const noPseudo = lastSegment.replace(/:{1,2}[a-zA-Z-]+(\(.+\))?/g, '');
+
+  // prefer id
+  const idMatch = noPseudo.match(/#([a-zA-Z0-9_-]+)/);
+  if (idMatch?.[1]) return idMatch[1];
+
+  // prefer last class
+  const classMatches = [...noPseudo.matchAll(/\.([a-zA-Z0-9_-]+)/g)];
+  if (classMatches.length > 0) {
+    return classMatches[classMatches.length - 1][1];
+  }
+
+  // fallback tag
+  const tagMatch = noPseudo.match(/^[a-zA-Z][a-zA-Z0-9-]*/);
+  if (tagMatch?.[0]) return tagMatch[0];
+
+  return 'field';
+}
+
 export function useElementPicker(iframeRef: RefObject<HTMLIFrameElement | null>) {
   const [captureMode, setCaptureMode] = useState<CaptureMode>('text');
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
@@ -31,23 +58,15 @@ export function useElementPicker(iframeRef: RefObject<HTMLIFrameElement | null>)
     iframeRef.current?.contentWindow?.postMessage(msg, '*');
   }, [iframeRef]);
 
-  // handle click from iframe based on current capture mode
   const handleClick = useCallback((msg: ClickMsg) => {
-    if (captureMode === 'text') {
-      // text mode: add exact selector, no duplicates
-      const field: Field = { sel: msg.exact, label: msg.text || msg.tag };
-      setFields((prev) => {
-        if (prev.find((f) => f.sel === field.sel)) return prev;
-        const next = [...prev, field];
-        post({ type: 'EP_ADD_FIELD', sel: field.sel });
-        return next;
-      });
-      return;
-    }
+    const sel = captureMode === 'list' ? (msg.listSel ?? msg.exact) : msg.exact;
 
-    // list mode: use list selector when available, else exact
-    const sel = msg.listSel ?? msg.exact;
-    const field: Field = { sel, label: msg.text || msg.tag };
+    const field: Field = {
+      sel,
+      label: msg.text || msg.tag,
+      name: autoNameFromSelector(sel),
+    };
+
     setFields((prev) => {
       if (prev.find((f) => f.sel === field.sel)) return prev;
       const next = [...prev, field];
@@ -78,6 +97,12 @@ export function useElementPicker(iframeRef: RefObject<HTMLIFrameElement | null>)
     post({ type: 'EP_REMOVE_FIELD', sel });
   }, [post]);
 
+  const renameField = useCallback((sel: string, name: string) => {
+    setFields((prev) =>
+      prev.map((f) => (f.sel === sel ? { ...f, name } : f))
+    );
+  }, []);
+
   const reset = useCallback(() => {
     setFields([]);
     setHoverInfo(null);
@@ -90,8 +115,24 @@ export function useElementPicker(iframeRef: RefObject<HTMLIFrameElement | null>)
     [fields]
   );
 
+  const getFieldNames = useCallback(
+    () =>
+      fields.map((f, i) => {
+        const cleaned = f.name?.trim();
+        return cleaned || autoNameFromSelector(f.sel) || `field-${i + 1}`;
+      }),
+    [fields]
+  );
+
   return {
-    captureMode, hoverInfo, fields,
-    setMode, removeField, reset, getFinalSelector,
+    captureMode,
+    hoverInfo,
+    fields,
+    setMode,
+    removeField,
+    renameField,
+    reset,
+    getFinalSelector,
+    getFieldNames,
   };
 }
