@@ -6,6 +6,7 @@ export const createJobSchema = z.object({
   name: z.string().min(1, "Datapoint name is required"),
   url: z.string().url("Must be a valid URL"),
   datapointPath: z.string().min(1, "CSS/HTML path is required"),
+  fieldNames: z.array(z.string()).optional(),
 
   // Section 2 - Schedule
   scheduleType: z.enum(["once", "schedule"]),
@@ -20,7 +21,8 @@ export const createJobSchema = z.object({
 
   // Section 4 - Output
   extractorType: z.enum(["smart", "basic"]),
-  outputFormat: z.enum(["json", "md", "txt"]),
+  outputFormat: z.enum(["json", "md", "txt", "csv"]),
+
 });
 
 export type CreateJobFormData = z.infer<typeof createJobSchema>;
@@ -37,5 +39,6 @@ export const CREATE_JOB_DEFAULTS: CreateJobFormData = {
   notifyOnDiff: true,
   notifyOnFail: true,
   extractorType: "smart",
+  fieldNames: [],
   outputFormat: "json",
 };
