@@ -1,5 +1,6 @@
 import { CheckIcon, ListIcon, TypeIcon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { CaptureMode, Field } from '@/hooks/useElementPicker';
 
@@ -8,17 +9,22 @@ interface Props {
   fields: Field[];
   onSetMode: (m: CaptureMode) => void;
   onRemoveField: (sel: string) => void;
+  onRenameField: (sel: string, name: string) => void;
   onConfirm: () => void;
   onReset: () => void;
 }
 
 export function ElementPickerSidebar({
-  captureMode, fields,
-  onSetMode, onRemoveField, onConfirm, onReset,
+  captureMode,
+  fields,
+  onSetMode,
+  onRemoveField,
+  onRenameField,
+  onConfirm,
+  onReset,
 }: Props) {
   return (
     <div className="w-72 shrink-0 flex flex-col gap-4 p-4 bg-muted/30">
-
       {/* Mode selector */}
       <div className="space-y-2">
         <p className="text-xs font-medium text-foreground">What to capture</p>
@@ -35,15 +41,16 @@ export function ElementPickerSidebar({
                   : 'border-border bg-background text-muted-foreground hover:bg-muted/50'
               )}
             >
-              {m === 'text'
-                ? <TypeIcon className="h-3.5 w-3.5" />
-                : <ListIcon className="h-3.5 w-3.5" />}
+              {m === 'text' ? (
+                <TypeIcon className="h-3.5 w-3.5" />
+              ) : (
+                <ListIcon className="h-3.5 w-3.5" />
+              )}
               {m === 'text' ? 'Text' : 'List'}
             </button>
           ))}
         </div>
 
-        {/* Mode description */}
         <p className="text-[11px] text-muted-foreground leading-relaxed">
           {captureMode === 'text'
             ? 'Click any element. Only that element is captured.'
@@ -68,12 +75,19 @@ export function ElementPickerSidebar({
                 key={f.sel}
                 className="flex items-start gap-2 bg-muted rounded px-2 py-1.5 group"
               >
-                <div className="flex-1 min-w-0 space-y-0.5">
+                <div className="flex-1 min-w-0 space-y-1">
                   <p className="text-[11px] text-muted-foreground truncate">{f.label}</p>
                   <code className="text-[10px] font-mono block truncate text-foreground">
                     {f.sel}
                   </code>
+                  <Input
+                    value={f.name ?? ''}
+                    onChange={(e) => onRenameField(f.sel, e.target.value)}
+                    placeholder="Field name"
+                    className="h-7 text-[11px]"
+                  />
                 </div>
+
                 <button
                   type="button"
                   onClick={() => onRemoveField(f.sel)}
@@ -117,7 +131,6 @@ export function ElementPickerSidebar({
           Clear all
         </Button>
       </div>
-
     </div>
   );
 }

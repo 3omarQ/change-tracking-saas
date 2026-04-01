@@ -6,7 +6,7 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   url: string;
-  onConfirm: (selector: string) => void;
+  onConfirm: (data: { selector: string; fieldNames: string[] }) => void;
 }
 
 export function ElementPickerModal({ open, onOpenChange, url, onConfirm }: Props) {
@@ -16,10 +16,14 @@ export function ElementPickerModal({ open, onOpenChange, url, onConfirm }: Props
         <DialogHeader className="px-5 py-3 border-b border-border shrink-0">
           <DialogTitle className="text-sm font-medium">Select a datapoint</DialogTitle>
         </DialogHeader>
+
         <div className="flex-1 overflow-hidden">
           <ElementPickerContent
             url={url}
-            onConfirm={(sel) => { onConfirm(sel); onOpenChange(false); }}
+            onConfirm={(data) => {
+              onConfirm(data);
+              onOpenChange(false);
+            }}
           />
         </div>
       </DialogContent>
