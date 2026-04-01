@@ -1,0 +1,57 @@
+'use client';
+import { useEffect, useRef } from 'react';
+import { useDatapointPreview } from '@/hooks/useDatapointPreview';
+import { useElementPicker } from '@/hooks/useElementPicker';
+import { ElementPickerBrowser } from './ElementPickerBrowser';
+import { ElementPickerToolbar } from './ElementPickerToolbar';
+import { ElementPickerSidebar } from './ElementPickerSidebar';
+import { PreviewError } from '../../datapoint-detail/PreviewError';
+import { PreviewSkeleton } from '../../datapoint-detail/PreviewSkeleton';
+
+interface Props {
+  url: string;
+  onConfirm: (selector: string) => void;
+}
+
+export function ElementPickerContent({ url, onConfirm }: Props) {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const stableHtml = useRef<string | null>(null);
+
+  const { html, status, error, load } = useDatapointPreview(url, '');
+  const picker = useElementPicker(iframeRef);
+
+  // reload when URL changes, freeze HTML once received
+  useEffect(() => {
+    stableHtml.current = null;
+    picker.reset();
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
+
+  if (html && !stableHtml.current) stableHtml.current = html;
+  const iframeHtml = stableHtml.current ?? html;
+
+  return (
+    <div className="flex h-full">
+
+      <div className="flex-1 flex flex-col overflow-hidden border-r border-border">
+        <ElementPickerToolbar hoverInfo={picker.hoverInfo} />
+        <div className="flex-1 relative overflow-hidden">
+          {!iframeHtml && status === 'loading' && <PreviewSkeleton />}
+          {status === 'error' && <PreviewError message={error ?? 'Failed to load'} />}
+          {iframeHtml && <ElementPickerBrowser ref={iframeRef} html={iframeHtml} />}
+        </div>
+      </div>
+
+      <ElementPickerSidebar
+        captureMode={picker.captureMode}
+        fields={picker.fields}
+        onSetMode={picker.setMode}
+        onRemoveField={picker.removeField}
+        onConfirm={() => onConfirm(picker.getFinalSelector())}
+        onReset={picker.reset}
+      />
+
+    </div>
+  );
+}
