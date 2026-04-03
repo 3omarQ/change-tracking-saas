@@ -46,6 +46,8 @@ export default function CreateJobPage() {
         name: data.name,
         path: data.datapointPath,
         targetUrlId: targetUrl.id,
+        fieldNames: data.fieldNames?.length ? data.fieldNames : undefined,
+
       });
 
       // Step 3 — create job, backend handles all scheduling

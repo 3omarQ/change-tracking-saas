@@ -15,6 +15,7 @@ export const jobService = {
   createDatapoint: async (data: {
     name: string;
     path: string;
+    fieldNames?: string[];
     targetUrlId: string;
   }) => {
     const { data: res } = await apiClient.post("/datapoints", data);
@@ -41,7 +42,7 @@ export const jobService = {
     return data;
   },
   remove: async (id: string) => {
-  const { data } = await apiClient.delete(`/jobs/${id}`);
-  return data;
-},
+    const { data } = await apiClient.delete(`/jobs/${id}`);
+    return data;
+  },
 };

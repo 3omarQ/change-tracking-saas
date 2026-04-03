@@ -28,7 +28,7 @@ export default function ExecutionPage() {
 		<div className="space-y-6 pb-16">
 			<ExecutionHeader execution={execution} />
 			<Separator />
-			<ExecutionResult results={execution.results} />
+			<ExecutionResult results={execution.results} format={execution.job.outputFormat} />
 			<Separator />
 			<ExecutionLogs logs={execution.logs} />
 		</div>

@@ -1,3 +1,5 @@
+import { OutputFormat } from "@/components/dashboard/create-job/extractor-config";
+
 export interface Workspace {
   id: string;
   name: string;
@@ -43,7 +45,7 @@ export interface Datapoint {
   targetUrl: {
     id: string;
     url: string;
-    baseUrl:string;
+    baseUrl: string;
     name: string;
     status: UrlStatus;
   };
@@ -101,6 +103,7 @@ export interface FieldProps {
 }
 export interface ExecutionWithResults extends JobExecution {
   results: Result[];
+  job: Job;
   _count: { logs: number; results: number };
 }
 

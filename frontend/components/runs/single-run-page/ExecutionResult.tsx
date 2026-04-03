@@ -1,22 +1,40 @@
-import { Result } from "@/types/dashboard.types";
+import { Result } from '@/types/dashboard.types';
+import { ExportButton } from './ExportButton';
+import { CsvTable } from './CsvTable';
 
 function extractText(result: Result): string {
-	const def = result.definition as Record<string, unknown>;
-	return typeof def?.text === "string" ? def.text : JSON.stringify(def, null, 2);
+  const def = result.definition as Record<string, unknown>;
+  if (typeof def?.text === 'string') return def.text;
+  if (typeof def?.output === 'string') return def.output;
+  return JSON.stringify(def, null, 2);
 }
 
-export function ExecutionResult({ results }: { results: Result[] }) {
-	if (results.length === 0)
-		return (
-			<div className="text-sm text-muted-foreground">No results recorded.</div>
-		);
 
-	return (
-		<div className="space-y-3">
-			<h2 className="text-sm font-semibold text-foreground">Result</h2>
-			<pre className="rounded-md border border-border bg-muted px-4 py-3 text-xs font-mono whitespace-pre-wrap break-words">
-				{extractText(results[0])}
-			</pre>
-		</div>
-	);
+interface Props {
+  results: Result[], format: string;
+}
+
+export function ExecutionResult({ results, format }: Props) {
+  if (results.length === 0)
+    return <div className="text-sm text-muted-foreground">No results recorded.</div>;
+
+  const text = extractText(results[0]);
+  const normalizedFormat = format.toLowerCase();
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-foreground">Result</h2>
+        <ExportButton text={text} format={normalizedFormat} />
+      </div>
+
+      {normalizedFormat === 'csv'
+        ? <CsvTable text={text} />
+        : (
+          <pre className="rounded-md border border-border bg-muted px-4 py-3 text-xs font-mono whitespace-pre-wrap break-words">
+            {text}
+          </pre>
+        )}
+    </div>
+  );
 }
