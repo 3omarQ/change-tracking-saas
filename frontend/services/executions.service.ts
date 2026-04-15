@@ -1,8 +1,8 @@
 import apiClient from "@/lib/api-client";
-import { ExecutionWithResults, ExecutionSummary } from "@/types/dashboard.types";
+import { ExecutionWithResults, ExecutionSummary, JobExecution } from "@/types/dashboard.types";
 
 export const executionsService = {
-  getOne: async (jobId: string, executionId: string): Promise<ExecutionWithResults> => {
+  getOne: async (jobId: string, executionId: string): Promise<JobExecution> => {
     const { data } = await apiClient.get(`/jobs/${jobId}/executions/${executionId}`);
     return data;
   },
@@ -12,7 +12,7 @@ export const executionsService = {
     return data;
   },
 
-  getAll: async (jobId: string): Promise<ExecutionSummary[]> => {
+  getAll: async (jobId: string): Promise<JobExecution[]> => {
     const { data } = await apiClient.get(`/jobs/${jobId}/executions`);
     return data;
   },

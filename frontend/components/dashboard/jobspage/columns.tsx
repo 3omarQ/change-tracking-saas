@@ -1,24 +1,12 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, ArrowRightIcon } from "lucide-react";
+import { ArrowUpDown, ActivitySquare, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 import { Job } from "@/types/dashboard.types";
 import { JobStatusBadge } from "./JobStatusBadge";
-
-function ActionCell({ id }: { id: string }) {
-  const router = useRouter();
-  return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="h-8 w-8 p-0"
-      onClick={() => router.push(`/dashboard/jobs/${id}`)}
-    >
-      <ArrowRightIcon className="h-4 w-4" />
-    </Button>
-  );
-}
+import { FaviconIcon } from "../targetspage/FaviconIcon";
 
 export const jobColumns: ColumnDef<Job>[] = [
   {
@@ -43,15 +31,50 @@ export const jobColumns: ColumnDef<Job>[] = [
     accessorFn: (row) => row.datapoint.targetUrl.url,
     header: "Target URL",
     cell: ({ row }) => (
-      <span className="text-xs text-muted-foreground truncate max-w-[200px] block">
-        {row.original.datapoint.targetUrl.url}
-      </span>
+      <div className="flex items-center gap-2">
+        <FaviconIcon url={row.original.datapoint.targetUrl.url} />
+        <span className="text-xs text-muted-foreground truncate max-w-[200px] block">
+          {row.original.datapoint.targetUrl.url}
+        </span>
+      </div>
     ),
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => <JobStatusBadge status={row.getValue("status")} />,
+  },
+  {
+    id: "configuration",
+    header: "Extractor",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-1.5">
+        <Badge variant="outline" className="text-[10px] h-5 px-1.5 font-medium">
+          {row.original.extractorType}
+        </Badge>
+        <Badge variant="secondary" className="text-[10px] h-5 px-1.5 font-medium">
+          {row.original.outputFormat}
+        </Badge>
+      </div>
+    ),
+  },
+  {
+    id: "executions",
+    header: "Executions",
+    cell: ({ row }) => {
+      const executionsCount = row.original._count?.executions || 0;
+      return (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Link
+            href={`/dashboard/jobs/${row.original.id}/runs`}
+            className="inline-flex w-full items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors"
+          >
+            <ActivitySquare className="h-3.5 w-3.5" />
+            <span className="font-medium">{executionsCount}</span>
+          </Link>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
@@ -66,13 +89,18 @@ export const jobColumns: ColumnDef<Job>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <span className="text-sm text-muted-foreground">
-        {new Date(row.getValue("createdAt")).toLocaleDateString()}
-      </span>
-    ),
+      <div className=" text-sm text-muted-foreground pr-2">
+        {new Date(row.getValue("createdAt")).toLocaleDateString("en-US", {
+          dateStyle: "medium"
+        })}
+      </div>)
   },
   {
     id: "actions",
-    cell: ({ row }) => <ActionCell id={row.original.id} />,
+    cell: () => (
+      <div className="flex justify-end pr-2">
+        <ChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-foreground/70" />
+      </div>
+    ),
   },
 ];

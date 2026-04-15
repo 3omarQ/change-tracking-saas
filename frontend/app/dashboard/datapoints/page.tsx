@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/dashboard/shared/PageHeader";
 import { FilterBar, SortOption, FilterOption } from "@/components/dashboard/shared/FilterBar";
@@ -9,6 +9,7 @@ import { datapointColumns } from "@/components/dashboard/datapointspage/columns"
 import { datapointService } from "@/services/datapoints.service";
 
 export default function DatapointsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
@@ -75,6 +76,7 @@ export default function DatapointsPage() {
         data={filtered}
         globalFilter={search}
         entityName="datapoint"
+        onRowClick={(row) => router.push(`/dashboard/datapoints/${row.id}`)}
       />
     </div>
   );

@@ -62,6 +62,7 @@ export default function JobsPage() {
         data={filtered}
         globalFilter={search}
         entityName="job"
+        onRowClick={(job) => router.push(`/dashboard/jobs/${job.id}`)}
       />
     </div>
   );

@@ -1,25 +1,26 @@
 "use client";
-import { useMemo } from "react";
-import { ExecutionSummary } from "@/types/dashboard.types";
+import { useRouter } from "next/navigation";
+import { JobExecution } from "@/types/dashboard.types";
 import { DataTable } from "@/components/dashboard/shared/DataTable";
-import { buildExecutionColumns } from "./columns";
+import { executionColumns } from "./columns";
 
 interface ExecutionHistoryTableProps {
-  executions: ExecutionSummary[];
+  executions: JobExecution[];
   jobId: string;
 }
 
 export function ExecutionHistoryTable({ executions, jobId }: ExecutionHistoryTableProps) {
-  const columns = useMemo(() => buildExecutionColumns(jobId), [jobId]);
+  const router = useRouter();
 
   return (
     <div className="space-y-3">
       <h2 className="text-sm font-semibold text-foreground">Execution history</h2>
       <DataTable
-        columns={columns}
+        columns={executionColumns}
         data={executions}
         globalFilter=""
-        entityName="executions"
+        entityName="execution"
+        onRowClick={(row) => router.push(`/dashboard/jobs/${jobId}/runs/${row.id}`)}
       />
     </div>
   );

@@ -42,6 +42,7 @@ export interface Datapoint {
   targetUrlId: string;
   createdAt: string;
   updatedAt: string;
+  fieldNames?: string | null;
   targetUrl: {
     id: string;
     url: string;
@@ -103,6 +104,7 @@ export interface FieldProps {
 }
 export interface ExecutionWithResults extends JobExecution {
   results: Result[];
+  log: Log[];
   job: Job;
   _count: { logs: number; results: number };
 }

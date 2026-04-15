@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { DatabaseIcon } from "lucide-react";
@@ -10,12 +13,16 @@ import { deriveJobCounts, jobsHref, datapointsHref } from "./helpers";
 import { TargetCardActions } from "./TargetCardActions";
 
 export function TargetCard({ target }: { target: TargetURL }) {
+  const router = useRouter();
   const counts = deriveJobCounts(target.datapoints);
   const url = target.url;
   const baseUrl = target.baseUrl!;
 
   return (
-    <Card className="group hover:shadow-md transition-all duration-200 hover:border-border">
+    <Card
+      onClick={() => router.push(jobsHref(url))}
+      className="group cursor-pointer hover:shadow-md transition-all duration-200 hover:border-border"
+    >
       <CardContent className="p-5 space-y-4">
         <div className="flex items-center gap-2">
           <FaviconIcon url={url} />
@@ -23,14 +30,16 @@ export function TargetCard({ target }: { target: TargetURL }) {
             {url}
           </span>
           <TargetStatusBadge status={target.status} />
-          <TargetCardActions target={target} />
+          <div onClick={(e) => e.stopPropagation()}>
+            <TargetCardActions target={target} />
+          </div>
         </div>
 
         <h3 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors duration-150">
           {target.name}
         </h3>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap" onClick={(e) => e.stopPropagation()}>
           <Link href={datapointsHref(baseUrl, url)}>
             <Badge
               variant="secondary"
@@ -49,9 +58,11 @@ export function TargetCard({ target }: { target: TargetURL }) {
         </div>
 
         <div className="flex items-center justify-between pt-1 border-t border-border/60">
-          <Link href={jobsHref(url)} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-            {counts.total} total jobs
-          </Link>
+          <div onClick={(e) => e.stopPropagation()}>
+            <Link href={jobsHref(url)} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              {counts.total} total jobs
+            </Link>
+          </div>
           <span className="text-xs text-muted-foreground">
             {new Date(target.createdAt).toLocaleDateString()}
           </span>

@@ -46,7 +46,8 @@ export default function DatapointActions({ datapoint }: { datapoint: Datapoint }
   });
 
   return (
-    <>
+    // Stop propagation so opening the menu doesn't trigger the row click
+    <div onClick={(e) => e.stopPropagation()}>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -94,6 +95,6 @@ export default function DatapointActions({ datapoint }: { datapoint: Datapoint }
         isLoading={isDeleting}
         onConfirm={deleteDatapoint}
       />
-    </>
+    </div>
   );
 }

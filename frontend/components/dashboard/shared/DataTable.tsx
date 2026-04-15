@@ -23,19 +23,18 @@ import {
 import { Button } from "@/components/ui/button";
 import { useMemo, useState } from "react";
 
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   globalFilter: string;
   entityName?: string;
+  onRowClick?: (row: TData) => void;
 }
 
 function createExactOrFuzzyFilter<TData>(): FilterFn<TData> {
   return (row, columnId, value, addMeta) => {
     const search = value as string;
-    const isExact =
-      search.startsWith('"') && search.endsWith('"') && search.length > 2;
+    const isExact = search.startsWith('"') && search.endsWith('"') && search.length > 2;
 
     if (isExact) {
       const exactTerm = search.slice(1, -1).toLowerCase();
@@ -52,6 +51,7 @@ export function DataTable<TData, TValue>({
   data,
   globalFilter,
   entityName = "row",
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-md border border-border">
+      <div className="overflow-hidden rounded-md border border-border ">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -81,10 +81,7 @@ export function DataTable<TData, TValue>({
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -93,23 +90,21 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  onClick={() => onRowClick?.(row.original)}
+                  className={onRowClick ? "cursor-pointer hover:bg-muted/50 transition-colors" : ""}
+                >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="truncate max-w-3xs">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                    <TableCell key={cell.id} className="truncate max-w-3xs py-3">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-muted-foreground text-sm"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground text-sm">
                   No {entityName}(s) found.
                 </TableCell>
               </TableRow>
