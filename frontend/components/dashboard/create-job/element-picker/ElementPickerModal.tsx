@@ -6,7 +6,12 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   url: string;
-  onConfirm: (data: { selector: string; fieldNames: string[] }) => void;
+  onConfirm: (data: {
+    selector: string;
+    fieldNames: string[];
+    paginationSelector?: string;
+    maxPages?: number;
+  }) => void;
 }
 
 export function ElementPickerModal({ open, onOpenChange, url, onConfirm }: Props) {

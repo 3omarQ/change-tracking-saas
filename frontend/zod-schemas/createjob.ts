@@ -8,6 +8,9 @@ export const createJobSchema = z.object({
   datapointPath: z.string().min(1, "CSS/HTML path is required"),
   fieldNames: z.array(z.string()).optional(),
 
+  paginationSelector: z.string().optional(),
+  maxPages: z.number().min(2).max(50).optional(),
+
   // Section 2 - Schedule
   scheduleType: z.enum(["once", "schedule"]),
   scheduleInterval: z.enum(CRON_INTERVALS).optional(),
@@ -41,4 +44,6 @@ export const CREATE_JOB_DEFAULTS: CreateJobFormData = {
   extractorType: "smart",
   fieldNames: [],
   outputFormat: "json",
+  paginationSelector: undefined,
+  maxPages: 5,
 };

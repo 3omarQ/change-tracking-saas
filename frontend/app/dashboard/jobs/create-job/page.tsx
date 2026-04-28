@@ -47,7 +47,8 @@ export default function CreateJobPage() {
         path: data.datapointPath,
         targetUrlId: targetUrl.id,
         fieldNames: data.fieldNames?.length ? data.fieldNames : undefined,
-
+        ...(data.paginationSelector ? { paginationSelector: data.paginationSelector } : {}),
+        ...(data.maxPages ? { maxPages: data.maxPages } : {}),
       });
 
       // Step 3 — create job, backend handles all scheduling

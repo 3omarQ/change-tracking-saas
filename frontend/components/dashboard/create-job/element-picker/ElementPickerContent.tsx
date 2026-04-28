@@ -10,7 +10,12 @@ import { PreviewSkeleton } from '../../datapoint-detail/PreviewSkeleton';
 
 interface Props {
   url: string;
-  onConfirm: (data: { selector: string; fieldNames: string[] }) => void;
+  onConfirm: (data: {
+    selector: string;
+    fieldNames: string[];
+    paginationSelector?: string;
+    maxPages?: number;
+  }) => void;
 }
 
 export function ElementPickerContent({ url, onConfirm }: Props) {
@@ -19,6 +24,15 @@ export function ElementPickerContent({ url, onConfirm }: Props) {
 
   const { html, status, error, load } = useDatapointPreview(url, '');
   const picker = useElementPicker(iframeRef);
+
+  const handleConfirm = () => {
+    onConfirm({
+      selector: picker.getFinalSelector(),
+      fieldNames: picker.fields.map((f) => f.name || f.label),
+      paginationSelector: picker.pagination?.selector,
+      maxPages: picker.pagination?.maxPages,
+    });
+  };
 
   useEffect(() => {
     stableHtml.current = null;
@@ -44,15 +58,15 @@ export function ElementPickerContent({ url, onConfirm }: Props) {
       <ElementPickerSidebar
         captureMode={picker.captureMode}
         fields={picker.fields}
+        pagination={picker.pagination}
+        pickingPagination={picker.pickingPagination}
         onSetMode={picker.setMode}
         onRemoveField={picker.removeField}
         onRenameField={picker.renameField}
-        onConfirm={() =>
-          onConfirm({
-            selector: picker.getFinalSelector(),
-            fieldNames: picker.getFieldNames(),
-          })
-        }
+        onStartPickingPagination={picker.startPickingPagination}
+        onClearPagination={picker.clearPagination}
+        onSetMaxPages={picker.setMaxPages}
+        onConfirm={handleConfirm}
         onReset={picker.reset}
       />
     </div>

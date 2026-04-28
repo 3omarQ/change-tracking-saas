@@ -23,13 +23,16 @@ export function JobBasicsSection({ form }: JobBasicsSectionProps) {
   const [elementPickerOpen, setElementPickerOpen] = useState(false);
   const url = watch("url");
   const fieldNames = watch("fieldNames") ?? [];
-
   const handleElementPickerConfirm = (data: {
     selector: string;
     fieldNames: string[];
+    paginationSelector?: string;
+    maxPages?: number;
   }) => {
-    setValue("datapointPath", data.selector, { shouldValidate: true });
-    setValue("fieldNames", data.fieldNames, { shouldValidate: true });
+    setValue('datapointPath', data.selector, { shouldValidate: true });
+    setValue('fieldNames', data.fieldNames);
+    setValue('paginationSelector', data.paginationSelector);
+    setValue('maxPages', data.maxPages);
   };
 
   return (
@@ -112,6 +115,22 @@ export function JobBasicsSection({ form }: JobBasicsSectionProps) {
               <p className="text-xs text-destructive">
                 {errors.datapointPath.message}
               </p>
+            )}
+
+            {watch("paginationSelector") && (
+              <div className="rounded-md border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30 px-3 py-2 mt-2">
+                <p className="text-[11px] font-medium text-amber-800 dark:text-amber-300 mb-1">
+                  Pagination configured
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] text-amber-700 dark:text-amber-400 font-mono">
+                    {watch("paginationSelector")}
+                  </span>
+                  <span className="text-[11px] text-amber-600 dark:text-amber-500">
+                    (Max {watch("maxPages")} pages)
+                  </span>
+                </div>
+              </div>
             )}
           </div>
         </div>

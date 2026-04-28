@@ -16,6 +16,8 @@ export const jobService = {
     name: string;
     path: string;
     fieldNames?: string[];
+    paginationSelector?: string;
+    maxPages?: number;
     targetUrlId: string;
   }) => {
     const { data: res } = await apiClient.post("/datapoints", data);
