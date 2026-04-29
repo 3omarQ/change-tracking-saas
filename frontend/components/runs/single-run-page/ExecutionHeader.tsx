@@ -1,4 +1,4 @@
-import { ExecutionWithResults } from "@/types/dashboard.types";
+import { JobExecution } from "@/types/dashboard.types";
 import { PageHeader } from "@/components/dashboard/shared/PageHeader";
 import { ExecutionStatusBadge } from "../ExecutionStatusBadge";
 
@@ -9,7 +9,7 @@ function formatDuration(start: string | null, end: string | null): string {
 	return `${(ms / 1000).toFixed(1)}s`;
 }
 
-export function ExecutionHeader({ execution }: { execution: ExecutionWithResults }) {
+export function ExecutionHeader({ execution }: { execution: JobExecution }) {
 	return (
 		<PageHeader
 			title="Execution"

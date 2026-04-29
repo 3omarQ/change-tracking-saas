@@ -60,6 +60,7 @@ export interface JobExecution {
   createdAt: string;
   logs: Log[];
   results: Result[];
+  job: Job;
 }
 
 export interface Log {

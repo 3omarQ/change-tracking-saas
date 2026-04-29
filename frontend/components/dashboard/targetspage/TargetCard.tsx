@@ -35,7 +35,7 @@ export function TargetCard({ target }: { target: TargetURL }) {
           </div>
         </div>
 
-        <h3 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors duration-150">
+        <h3 className="font-semibold text-sm leading-tight break-all line-clamp-4 group-hover:text-primary transition-colors duration-150">
           {target.name}
         </h3>
 

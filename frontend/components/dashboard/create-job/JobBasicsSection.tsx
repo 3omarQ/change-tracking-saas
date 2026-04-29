@@ -118,15 +118,15 @@ export function JobBasicsSection({ form }: JobBasicsSectionProps) {
             )}
 
             {watch("paginationSelector") && (
-              <div className="rounded-md border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30 px-3 py-2 mt-2">
-                <p className="text-[11px] font-medium text-amber-800 dark:text-amber-300 mb-1">
+              <div className="rounded-md border border-amber-200 bg-amber-50  px-3 py-2 mt-2">
+                <p className="text-[11px] font-medium text-amber-800  mb-1">
                   Pagination configured
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-amber-700 dark:text-amber-400 font-mono">
+                  <span className="text-[11px] text-amber-700  font-mono">
                     {watch("paginationSelector")}
                   </span>
-                  <span className="text-[11px] text-amber-600 dark:text-amber-500">
+                  <span className="text-[11px] text-amber-600 ">
                     (Max {watch("maxPages")} pages)
                   </span>
                 </div>

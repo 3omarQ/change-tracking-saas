@@ -108,9 +108,9 @@ export function ElementPickerSidebar({
 
             {pagination ? (
               <div className="space-y-2">
-                <div className="flex items-center gap-2 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded px-2 py-1.5">
-                  <ChevronRightIcon className="h-3.5 w-3.5 text-amber-600 shrink-0" />
-                  <code className="text-[10px] font-mono truncate flex-1 text-amber-800 dark:text-amber-300">
+                <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 dark:border-amber-800 rounded px-2 py-1.5">
+                  <ChevronRightIcon className="h-3.5 w-3.5 text-amber-800 shrink-0" />
+                  <code className="text-[10px] font-mono truncate flex-1 text-amber-800 ">
                     {pagination.selector}
                   </code>
                   <button type="button" onClick={onClearPagination}>
@@ -142,7 +142,7 @@ export function ElementPickerSidebar({
                   className={cn(
                     'w-full flex items-center justify-center gap-1.5 rounded-md border px-3 py-2 text-xs font-medium transition-colors',
                     pickingPagination
-                      ? 'border-amber-400 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-300'
+                      ? 'border-amber-400 bg-amber-50 text-amber-700'
                       : 'border-border bg-background text-muted-foreground hover:bg-muted/50'
                   )}
                 >
