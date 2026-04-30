@@ -7,6 +7,7 @@ import { ExecutionHeader } from "@/components/runs/single-run-page/ExecutionHead
 import { ExecutionLogs } from "@/components/runs/single-run-page/ExecutionLogs";
 import { ExecutionResult } from "@/components/runs/single-run-page/ExecutionResult";
 import { useExecutionLogs } from "@/hooks/useExecutionLogs";
+import { useMemo } from "react";
 
 export default function ExecutionPage() {
 	const { id: jobId, executionId } = useParams<{ id: string; executionId: string }>();
@@ -20,7 +21,8 @@ export default function ExecutionPage() {
 	});
 
 	const isLive = execution?.status === 'RUNNING';
-	const logs = useExecutionLogs(executionId, execution?.logs ?? []);
+	const initialLogs = useMemo(() => execution?.logs ?? [], [execution?.logs]);
+	const logs = useExecutionLogs(executionId, initialLogs);
 
 	if (isLoading) return (
 		<div className="py-24 text-center text-sm text-muted-foreground">

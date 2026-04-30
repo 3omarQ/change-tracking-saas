@@ -6,10 +6,12 @@ export function useExecutionLogs(executionId: string, initialLogs: Log[]) {
   const [logs, setLogs] = useState<Log[]>(initialLogs);
   const socket = useSocket();
 
-  // sync if initialLogs arrives after mount
   useEffect(() => {
-    setLogs(initialLogs);
-  }, [initialLogs]);
+    if (initialLogs.length > 0) {
+      setLogs(initialLogs);
+    }
+  }, // eslint-disable-next-line react-hooks/exhaustive-deps
+    [initialLogs.length]);
 
   useEffect(() => {
     if (!socket) return;
