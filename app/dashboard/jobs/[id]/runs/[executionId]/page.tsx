@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { ExecutionHeader } from "@/components/runs/single-run-page/ExecutionHeader";
 import { ExecutionLogs } from "@/components/runs/single-run-page/ExecutionLogs";
 import { ExecutionResult } from "@/components/runs/single-run-page/ExecutionResult";
+import { useExecutionLogs } from "@/hooks/useExecutionLogs";
 
 export default function ExecutionPage() {
 	const { id: jobId, executionId } = useParams<{ id: string; executionId: string }>();
@@ -13,15 +14,19 @@ export default function ExecutionPage() {
 	const { data: execution, isLoading } = useQuery({
 		queryKey: ["execution", jobId, executionId],
 		queryFn: () => executionsService.getOne(jobId, executionId),
+		refetchInterval: (query) =>
+			query.state.data?.status === 'RUNNING' ? 3000 : false,
+
 	});
 
-	if (isLoading)
-		return (
-			<div className="py-24 text-center text-sm text-muted-foreground">
-				Loading execution...
-			</div>
-		);
+	const isLive = execution?.status === 'RUNNING';
+	const logs = useExecutionLogs(executionId, execution?.logs ?? []);
 
+	if (isLoading) return (
+		<div className="py-24 text-center text-sm text-muted-foreground">
+			Loading execution...
+		</div>
+	);
 	if (!execution) return null;
 
 	return (
@@ -30,7 +35,7 @@ export default function ExecutionPage() {
 			<Separator />
 			<ExecutionResult results={execution.results} format={execution.job.outputFormat} />
 			<Separator />
-			<ExecutionLogs logs={execution.logs} />
+			<ExecutionLogs logs={logs} isLive={isLive} />
 		</div>
 	);
 }

@@ -6,21 +6,16 @@ import { Notification } from "@/types/dashboard.types";
 const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 const NOTIFICATION_QUERY_KEY = ["notifications"];
 
-let socket: Socket | null = null;
+let socketSingleton: Socket | null = null;
 
 function getSocket(token: string): Socket {
-  if (!socket) {
-    socket = io(SOCKET_URL, {
+  if (!socketSingleton) {
+    socketSingleton = io(SOCKET_URL, {
       auth: { token },
       transports: ["websocket"],
     });
   }
-  return socket;
-}
-
-function disconnectSocket() {
-  socket?.disconnect();
-  socket = null;
+  return socketSingleton;
 }
 
 export function useNotificationsSocket(token: string | null) {
@@ -32,7 +27,6 @@ export function useNotificationsSocket(token: string | null) {
     const client = getSocket(token);
 
     client.on("notification", (notification: Notification) => {
-      // prepend new notification to existing cache
       queryClient.setQueryData<Notification[]>(
         NOTIFICATION_QUERY_KEY,
         (prev) => [notification, ...(prev ?? [])]
@@ -41,7 +35,8 @@ export function useNotificationsSocket(token: string | null) {
 
     return () => {
       client.off("notification");
-      disconnectSocket();
     };
   }, [token, queryClient]);
+
+  return { socket: token ? getSocket(token) : null };
 }
