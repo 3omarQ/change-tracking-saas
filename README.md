@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DataWatch Frontend (Change Tracking SaaS)
 
-## Getting Started
+## Problem
 
-First, run the development server:
+for users and businesses who need to monitor changes on web pages / websites ,such as price drops, stock availability, policy updates, or competitor movements. Manually checking these sites is tedious.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Solution
+
+DataWatch provides a user-friendly / nocode interface for scheduling and monitoring web scrapers. Users can track specific data points on any website, view execution histories, and instantly see visual diffs of what changed between scrapes.
+
+## Key Features
+
+- **Dashboard & Job Management**: Create, edit, and manage scraping jobs.
+- **Visual Diff Viewer**: See exactly what changed in the extracted data using a built-in diff viewer.
+- **Real-Time Updates**: Instant notifications and status updates via email or inapp when a scrape succeeds or fails, or finds a difference.
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) (v16+)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) (v4), [Radix UI](https://www.radix-ui.com/)
+- **State Management & Fetching**: [TanStack Query](https://tanstack.com/query)
+- **Tables**: [TanStack Table](https://tanstack.com/table)
+- **Forms & Validation**: React Hook Form, Zod
+- **Real-time**: Socket.IO Client
+- **Diffing**: React Diff Viewer Continued
+
+## Quickstart
+
+1. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+2. **Run the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+3. **Open the app:**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Environment Variables
+
+Create a `.env.local` file in the root of the project (see the .env.example file):
+
+```env
+# Example Env Vars
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_SOCKET_URL=http://localhost:3001
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This Next.js app can be easily deployed to Vercel, Netlify, or your own Node.js server using:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Roadmap
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Implement team workspaces.
+- [ ] Add visual/screenshot diffing directly in the UI.
+- [ ] Build a browser extension to quickly add jobs from any webpage.
+- [ ] Add Webhook integration configurations in the dashboard.
