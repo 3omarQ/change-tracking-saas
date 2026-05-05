@@ -29,9 +29,22 @@ export default function JobsPage() {
   };
 
   const filtered = useMemo(() => {
-    if (!statusParam) return jobs;
-    return jobs.filter((j) => j.status === statusParam);
-  }, [jobs, statusParam]);
+    const result = statusParam
+      ? jobs.filter((j) => j.status === statusParam)
+      : [...jobs];
+
+    result.sort((a, b) => {
+      if (sort === "alphabetical") {
+        return a.datapoint.name.localeCompare(b.datapoint.name);
+      }
+
+      return (
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    });
+
+    return result;
+  }, [jobs, sort, statusParam]);
 
   if (isLoading)
     return (

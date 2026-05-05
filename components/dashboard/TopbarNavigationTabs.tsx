@@ -13,7 +13,6 @@ const NAV_LINKS: NavLink[] = [
   { label: "Targets", href: "/dashboard/targets" },
   { label: "Datapoints", href: "/dashboard/datapoints" },
   { label: "Jobs", href: "/dashboard/jobs" },
-  { label: "Credits", href: "/dashboard/credits" },
 ];
 
 export function TopBarNavigationTabs() {

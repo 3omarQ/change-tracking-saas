@@ -38,6 +38,11 @@ export default function TargetsPage() {
     }
     if (sort === "alphabetical") {
       result.sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+      result.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     }
     return result;
   }, [search, sort, targets]);

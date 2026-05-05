@@ -9,6 +9,13 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SearchIcon, XIcon } from "lucide-react";
 
 export type SortOption = "latest" | "alphabetical";
@@ -33,16 +40,15 @@ interface FilterBarProps {
 
 export function FilterBar({
   search,
-
+  sort,
+  onSortChange,
   onSearchChange,
-
   searchPlaceholder = "Search...",
   targetOptions,
   targetValue,
   onTargetChange,
   activeStatus,
   onStatusClear,
-
 }: FilterBarProps) {
   return (
     <div className="flex items-center gap-3 flex-wrap">
@@ -55,6 +61,16 @@ export function FilterBar({
           className="pl-9"
         />
       </div>
+
+      <Select value={sort} onValueChange={(v) => onSortChange(v as SortOption)}>
+        <SelectTrigger className="w-40">
+          <SelectValue placeholder="Sort by" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="latest">Latest</SelectItem>
+          <SelectItem value="alphabetical">Alphabetically</SelectItem>
+        </SelectContent>
+      </Select>
 
       {targetOptions && onTargetChange && (
         <Combobox
@@ -100,8 +116,6 @@ export function FilterBar({
           <XIcon className="h-3 w-3 text-muted-foreground" />
         </button>
       )}
-
-
     </div>
   );
 }

@@ -40,11 +40,24 @@ export default function DatapointsPage() {
   }, [datapoints]);
 
   const filtered = useMemo(() => {
-    if (!targetValue) return datapoints;
-    return datapoints.filter(
-      (d) => (d.targetUrl.baseUrl ?? d.targetUrl.url) === targetValue.id
-    );
-  }, [datapoints, targetValue]);
+    const result = targetValue
+      ? datapoints.filter(
+          (d) => (d.targetUrl.baseUrl ?? d.targetUrl.url) === targetValue.id
+        )
+      : [...datapoints];
+
+    result.sort((a, b) => {
+      if (sort === "alphabetical") {
+        return a.name.localeCompare(b.name);
+      }
+
+      return (
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    });
+
+    return result;
+  }, [datapoints, sort, targetValue]);
 
   if (isLoading)
     return (
