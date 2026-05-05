@@ -3,10 +3,8 @@ import { Trash2Icon } from "lucide-react";
 import { JobDetailSection } from "@/components/dashboard/job-detail/JobDetailSection";
 import { DeleteButton } from "@/components/dashboard/shared/DeleteButton";
 import { usersService } from "@/services/users.service";
-import { useRouter } from "next/navigation";
 
 export function DangerZone() {
-    const router = useRouter();
     return (
         <JobDetailSection icon={Trash2Icon} label="Danger Zone">
             <div className="flex items-center justify-between max-w-sm">
@@ -30,7 +28,7 @@ export function DangerZone() {
                         </>
                     }
                     action={() => usersService.deleteAccount()}
-                    redirectTo="/auth/login"
+                    redirectTo="/sign-in"
                     successMessage="Account deleted."
                     errorMessage="Failed to delete account."
                 />

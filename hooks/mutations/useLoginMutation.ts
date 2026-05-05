@@ -14,7 +14,7 @@ export const useLoginMutation = () => {
     mutationFn: authService.login,
     onSuccess: () => {
       toast.success("Login successful!");
-      router.push("/");
+      router.push("/dashboard/targets");
     },
     onError: (error: AxiosError<ApiError>) => {
       toast.error(error.response?.data?.message || "Invalid email or password");

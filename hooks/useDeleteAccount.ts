@@ -9,7 +9,7 @@ export function useDeleteAccount() {
     mutationFn: () => usersService.deleteAccount(),
     onSuccess: () => {
       toast.success("Account deleted.");
-      router.push("/auth/login");
+      router.push("/sign-in");
     },
     onError: () => toast.error("Failed to delete account."),
   });

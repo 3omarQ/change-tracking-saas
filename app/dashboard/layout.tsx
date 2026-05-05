@@ -23,7 +23,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const user = await getMe();
-  if (!user) redirect("/auth/login");
+  if (!user) redirect("/sign-in");
 
   return (
     <div className="min-h-screen bg-background">
