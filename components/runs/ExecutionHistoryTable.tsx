@@ -21,6 +21,11 @@ export function ExecutionHistoryTable({ executions, jobId }: ExecutionHistoryTab
         globalFilter=""
         entityName="execution"
         onRowClick={(row) => router.push(`/dashboard/jobs/${jobId}/runs/${row.id}`)}
+        emptyState={{
+          title: "No executions yet.",
+          description:
+            "Run this job once to generate its first execution and view results here.",
+        }}
       />
     </div>
   );

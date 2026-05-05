@@ -21,7 +21,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
+import Link from "next/link";
+import { type ReactNode, useMemo, useState } from "react";
+
+interface EmptyState {
+  title: string;
+  description?: string;
+  actionLabel?: string;
+  actionHref?: string;
+  onAction?: () => void;
+  action?: ReactNode;
+}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -29,6 +39,8 @@ interface DataTableProps<TData, TValue> {
   globalFilter: string;
   entityName?: string;
   onRowClick?: (row: TData) => void;
+  emptyState?: EmptyState;
+  filteredEmptyState?: EmptyState;
 }
 
 function createExactOrFuzzyFilter<TData>(): FilterFn<TData> {
@@ -46,12 +58,40 @@ function createExactOrFuzzyFilter<TData>(): FilterFn<TData> {
   };
 }
 
+function TableEmptyState({ state }: { state: EmptyState }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 py-12 text-center">
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-foreground">{state.title}</p>
+        {state.description && (
+          <p className="mx-auto max-w-sm text-xs leading-5 text-muted-foreground">
+            {state.description}
+          </p>
+        )}
+      </div>
+      {state.actionLabel && state.actionHref && (
+        <Button asChild size="sm">
+          <Link href={state.actionHref}>{state.actionLabel}</Link>
+        </Button>
+      )}
+      {state.actionLabel && state.onAction && (
+        <Button type="button" variant="outline" size="sm" onClick={state.onAction}>
+          {state.actionLabel}
+        </Button>
+      )}
+      {state.action}
+    </div>
+  );
+}
+
 export function DataTable<TData, TValue>({
   columns,
   data,
   globalFilter,
   entityName = "row",
   onRowClick,
+  emptyState,
+  filteredEmptyState,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -69,6 +109,18 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const rows = table.getRowModel().rows;
+  const isFilteredEmpty = data.length > 0 && rows.length === 0;
+  const resolvedEmptyState = isFilteredEmpty
+    ? filteredEmptyState ?? {
+        title: `No ${entityName}s match your filters.`,
+        description: "Try changing your search or filters.",
+      }
+    : emptyState ?? {
+        title: `No ${entityName}s found.`,
+        description: "There is nothing to show yet.",
+      };
 
   return (
     <div className="space-y-4">
@@ -88,8 +140,8 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+            {rows.length ? (
+              rows.map((row) => (
                 <TableRow
                   key={row.id}
                   onClick={() => onRowClick?.(row.original)}
@@ -104,8 +156,8 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground text-sm">
-                  No {entityName}(s) found.
+                <TableCell colSpan={columns.length}>
+                  <TableEmptyState state={resolvedEmptyState} />
                 </TableCell>
               </TableRow>
             )}
@@ -113,30 +165,31 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} {entityName}(s)
-        </span>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+      {rows.length > 0 && (
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">
+            {table.getFilteredRowModel().rows.length} {entityName}(s)
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

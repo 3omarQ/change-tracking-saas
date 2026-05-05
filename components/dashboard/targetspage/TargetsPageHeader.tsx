@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { CreateJobButton } from "@/components/dashboard/shared/CreateJobButton";
 
 interface TargetsPageHeaderProps {
   totalJobs: number;
@@ -11,7 +9,6 @@ export function TargetsPageHeader({
   totalJobs,
   totalDatapoints,
 }: TargetsPageHeaderProps) {
-  const router = useRouter();
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -33,15 +30,7 @@ export function TargetsPageHeader({
         </div>
       </div>
 
-      <Button
-        className="gap-2"
-        onClick={() => {
-          router.push("/dashboard/jobs/create-job");
-        }}
-      >
-        <PlusIcon className="h-4 w-4" />
-        Build new job
-      </Button>
+      <CreateJobButton />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/dashboard/shared/PageHeader";
 import { FilterBar, SortOption } from "@/components/dashboard/shared/FilterBar";
 import { DataTable } from "@/components/dashboard/shared/DataTable";
+import { CreateJobButton } from "@/components/dashboard/shared/CreateJobButton";
 import { jobColumns } from "@/components/dashboard/jobspage/columns";
 import { jobService } from "@/services/jobs.service";
 import { JobStatus } from "@/types/dashboard.types";
@@ -46,6 +47,27 @@ export default function JobsPage() {
     return result;
   }, [jobs, sort, statusParam]);
 
+  const jobEmptyState =
+    jobs.length === 0
+      ? {
+        title: "No jobs yet.",
+        description:
+          "Build your first job to extract data from a target page and start tracking changes.",
+        action: <CreateJobButton size="sm" />,
+      }
+      : statusParam
+        ? {
+          title: `No ${statusParam.toLowerCase()} jobs.`,
+          description: "Clear the status filter to see all jobs in this workspace.",
+          actionLabel: "Clear status filter",
+          onAction: clearStatus,
+        }
+        : {
+          title: "No jobs found.",
+          description: "Try changing your filters or build a new job.",
+          action: <CreateJobButton size="sm" />,
+        };
+
   if (isLoading)
     return (
       <div className="py-24 text-center text-sm text-muted-foreground">
@@ -58,8 +80,7 @@ export default function JobsPage() {
       <PageHeader
         title="Jobs"
         stats={[{ label: "jobs", value: jobs.length }]}
-        actionLabel="Build new job"
-        actionHref="/dashboard/jobs/create-job"
+        actions={<CreateJobButton />}
       />
       <FilterBar
         search={search}
@@ -76,6 +97,13 @@ export default function JobsPage() {
         globalFilter={search}
         entityName="job"
         onRowClick={(job) => router.push(`/dashboard/jobs/${job.id}`)}
+        emptyState={jobEmptyState}
+        filteredEmptyState={{
+          title: "No jobs match your search.",
+          description: "Clear your search to see the available jobs.",
+          actionLabel: "Clear search",
+          onAction: () => setSearch(""),
+        }}
       />
     </div>
   );

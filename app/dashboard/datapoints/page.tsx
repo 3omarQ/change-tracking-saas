@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/dashboard/shared/PageHeader";
 import { FilterBar, SortOption, FilterOption } from "@/components/dashboard/shared/FilterBar";
 import { DataTable } from "@/components/dashboard/shared/DataTable";
+import { CreateJobButton } from "@/components/dashboard/shared/CreateJobButton";
 import { datapointColumns } from "@/components/dashboard/datapointspage/columns";
 import { datapointService } from "@/services/datapoints.service";
 
@@ -42,8 +43,8 @@ export default function DatapointsPage() {
   const filtered = useMemo(() => {
     const result = targetValue
       ? datapoints.filter(
-          (d) => (d.targetUrl.baseUrl ?? d.targetUrl.url) === targetValue.id
-        )
+        (d) => (d.targetUrl.baseUrl ?? d.targetUrl.url) === targetValue.id
+      )
       : [...datapoints];
 
     result.sort((a, b) => {
@@ -59,6 +60,27 @@ export default function DatapointsPage() {
     return result;
   }, [datapoints, sort, targetValue]);
 
+  const datapointEmptyState =
+    datapoints.length === 0
+      ? {
+        title: "No datapoints yet.",
+        description:
+          "Build a job to define the first datapoint you want to extract and monitor.",
+        action: <CreateJobButton size="sm" />,
+      }
+      : targetValue
+        ? {
+          title: "No datapoints for this target.",
+          description: "Clear the target filter to see datapoints from all targets.",
+          actionLabel: "Clear target filter",
+          onAction: () => setTargetValue(null),
+        }
+        : {
+          title: "No datapoints found.",
+          description: "Try changing your filters or build a new job.",
+          action: <CreateJobButton size="sm" />,
+        };
+
   if (isLoading)
     return (
       <div className="py-24 text-center text-sm text-muted-foreground">
@@ -71,8 +93,7 @@ export default function DatapointsPage() {
       <PageHeader
         title="Datapoints"
         stats={[{ label: "datapoints", value: datapoints.length }]}
-        actionLabel="Build new job"
-        actionHref="/dashboard/jobs/create-job"
+        actions={<CreateJobButton />}
       />
       <FilterBar
         search={search}
@@ -90,6 +111,13 @@ export default function DatapointsPage() {
         globalFilter={search}
         entityName="datapoint"
         onRowClick={(row) => router.push(`/dashboard/datapoints/${row.id}`)}
+        emptyState={datapointEmptyState}
+        filteredEmptyState={{
+          title: "No datapoints match your search.",
+          description: "Clear your search to see the available datapoints.",
+          actionLabel: "Clear search",
+          onAction: () => setSearch(""),
+        }}
       />
     </div>
   );

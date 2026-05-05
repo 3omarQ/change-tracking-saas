@@ -66,7 +66,12 @@ export default function TargetsPage() {
         onSearchChange={setSearch}
         onSortChange={setSort}
       />
-      <TargetsGrid targets={filteredTargets} />
+      <TargetsGrid
+        targets={filteredTargets}
+        totalTargets={targets.length}
+        hasActiveFilters={Boolean(search.trim())}
+        onClearFilters={() => setSearch("")}
+      />
     </div>
   );
 }
