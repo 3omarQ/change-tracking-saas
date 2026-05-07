@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { TopBarWrapper } from "@/components/dashboard/TopBarWrapper";
 import { NotificationsProvider } from "@/components/providers/NotificationProvider";
 import { BreadcrumbProvider } from "@/components/dashboard/shared/BreadcrumbContext";
+import { Breadcrumbs } from "@/components/dashboard/shared/Breadcrumbs";
 
 async function getMe() {
   const cookieStore = await cookies();
@@ -32,9 +33,11 @@ export default async function DashboardLayout({
       <NotificationsProvider >
         <main className="mx-auto max-w-6xl px-4 py-8">
           <BreadcrumbProvider>
+            <div className="mb-4">
+              <Breadcrumbs />
+            </div>
             {children}
           </BreadcrumbProvider>
-
         </main>
       </NotificationsProvider>
     </div>

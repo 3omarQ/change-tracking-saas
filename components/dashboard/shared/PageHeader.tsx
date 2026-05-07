@@ -1,9 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "lucide-react";
+import { ChevronLeftIcon, PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Breadcrumbs } from "./Breadcrumbs";
 
 export interface BreadcrumbItem {
   label: string;
@@ -20,7 +19,7 @@ interface PageHeaderProps {
   // detail page props
   showBackButton?: boolean;
   backHref?: string; // explicit back destination
-  breadcrumbs?: BreadcrumbItem[]; // e.g. [{label:"Jobs",href:"/dashboard/jobs"}, ...]
+  breadcrumbs?: BreadcrumbItem[]; // No longer rendered inside here directly, kept for backwards prop compatibility if any
   meta?: React.ReactNode;
   // list page props
   stats?: StatItem[];
@@ -60,8 +59,7 @@ function Stats({ stats }: { stats: StatItem[] }) {
 
 export function PageHeader({ title, showBackButton, backHref, meta, stats, actionLabel, actionHref, actions }: PageHeaderProps) {
   return (
-    <div className="flex flex-col gap-3">
-      <Breadcrumbs />
+    <div className="flex flex-col gap-3 mb-6">
       <div className="flex items-center justify-between gap-4 w-full min-w-0">
         <div className="flex items-center gap-2.5 min-w-0">
           {showBackButton && <BackButton href={backHref} />}

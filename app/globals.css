@@ -65,9 +65,9 @@
   --sidebar-ring: hsl(181 67% 51%);
 
   /* Typography */
-  --font-sans: Inter, sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: JetBrains Mono, monospace;
+  --font-sans: var(--font-noto-sans), sans-serif;
+  --font-serif: var(--font-noto-serif), serif;
+  --font-mono: var(--font-noto-mono), monospace;
 
   /* Radius */
   --radius: 0.375rem;
@@ -147,9 +147,9 @@
   --sidebar-ring: hsl(181 67% 51%);
 
   /* Typography */
-  --font-sans: Inter, sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: JetBrains Mono, monospace;
+  --font-sans: var(--font-noto-sans), sans-serif;
+  --font-serif: var(--font-noto-serif), serif;
+  --font-mono: var(--font-noto-mono), monospace;
 
   /* Radius */
   --radius: 0.375rem;
